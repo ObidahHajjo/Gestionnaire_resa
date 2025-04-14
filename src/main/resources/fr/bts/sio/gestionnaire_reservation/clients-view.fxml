@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <VBox prefHeight="200.0" prefWidth="100.0">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <ListView fx:id="listClients" prefHeight="200.0" prefWidth="200.0" />
+               </children>
+            </VBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <VBox prefHeight="200.0" prefWidth="300.0">
+                     <children>
+                        <Label fx:id="labelNom" text="Nom" />
+                        <TextField fx:id="testFieldNom" />
+                        <Label fx:id="labelPrenom" text="Prénom" />
+                        <TextField fx:id="textFieldPrenom" />
+                     </children></VBox>
+                  <VBox prefHeight="100.0" prefWidth="300.0">
+                     <children>
+                        <Label fx:id="labelTelephone" text="Téléphone" />
+                        <TextField fx:id="textFieldTelephone" />
+                        <Label fx:id="labelEmail" text="Email" />
+                        <TextField fx:id="textFieldEmail" />
+                     </children></VBox>
+               </children>
+            </HBox>
+            <VBox alignment="CENTER" prefHeight="100.0" prefWidth="100.0">
+               <children>
+                  <Button fx:id="buttonSauvegarder" mnemonicParsing="false" text="Sauvegarder" />
+               </children>
+            </VBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="buttonCreer" mnemonicParsing="false" text="Créer" />
+                  <Button fx:id="buttonModifier" mnemonicParsing="false" text="Modifier" />
+                  <Button fx:id="buttonEffacer" mnemonicParsing="false" text="Effacer" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</GridPane>
