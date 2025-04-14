@@ -28,19 +28,23 @@ public class FactureDAO {
 
     /**
      * CREATE : Ajouter une facture dans la base de données
-     * @param facture L'objet Facture contenant les données à insérer
+     * @param idFactures L'objet Facture contenant les données à insérer
      * @throws SQLException En cas d'erreur lors de l'exécution de la requête SQL
      */
-    public void ajouterFacture(Facture facture) throws SQLException {
+    public void ajouterFacture(int idFactures, String chemin, String nomFichier, float tva,
+                               float prix){
         String sql = "INSERT INTO factures (chemin, nom_fichier, tva, prix) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             // Remplacement des paramètres "?" par les données de l'objet `facture`
-            stmt.setString(1, facture.getChemin());
-            stmt.setString(2, facture.getNomFichier());
-            stmt.setFloat(3, facture.getTva());
-            stmt.setFloat(4, facture.getPrix());
+            stmt.setString(1, chemin);
+            stmt.setString(2, nomFichier);
+            stmt.setFloat(3, tva);
+            stmt.setFloat(4, prix);
             // Exécution de la requête INSERT
             stmt.executeUpdate();
+
+        }catch(SQLException e){
+            System.out.println("Erreur lors de l'ajout de la facture : " + e.getMessage());
         }
     }
 
@@ -50,7 +54,7 @@ public class FactureDAO {
      * @return Un objet Facture correspondant à l'ID, ou null si non trouvé
      * @throws SQLException En cas d'erreur lors de l'exécution de la requête SQL
      */
-    public Facture getFactureById(int id) throws SQLException {
+    public Facture chercherFactureParId(int id) {
         String sql = "SELECT * FROM factures WHERE id_factures = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id); // Passage de l'ID recherché
@@ -65,6 +69,8 @@ public class FactureDAO {
                         rs.getFloat("prix")
                 );
             }
+        }catch (SQLException e){
+            System.out.println("Erreur lors de la recherche de la facture : " + e.getMessage());
         }
         return null; // Retourne null si aucune facture trouvée
     }
@@ -74,7 +80,7 @@ public class FactureDAO {
      * @return Une liste contenant toutes les factures
      * @throws SQLException En cas d'erreur lors de l'exécution de la requête SQL
      */
-    public List<Facture> getAllFactures() throws SQLException {
+    public List<Facture> chercherToutesFactures() {
         List<Facture> factures = new ArrayList<>();
         String sql = "SELECT * FROM factures";
         try (Statement stmt = connection.createStatement()) {
@@ -90,25 +96,30 @@ public class FactureDAO {
                 );
                 factures.add(facture);
             }
+        }catch (SQLException e){
+            System.out.println("Erreur lors de la recherche des factures : " + e.getMessage());
         }
         return factures; // Retourne la liste complète des factures
     }
 
     /**
      * UPDATE : Modifier une facture existante
-     * @param facture L'objet Facture contenant les nouvelles données
+     * @param idFacture L'objet Facture contenant les nouvelles données
      * @throws SQLException En cas d'erreur lors de l'exécution de la requête SQL
      */
-    public void updateFacture(Facture facture) throws SQLException {
-        String sql = "UPDATE factures SET chemin = ?, nom_fichier = ?, tva = ?, prix = ? WHERE id_factures = ?";
+    public void modifierFacture(int idFacture, String chemin, String nomFichier, float tva, float prix) {
+        String sql = "UPDATE factures SET chemin = ?, nomFichier = ?, tva = ?, prix = ? WHERE id_factures = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             // Mise à jour des champs avec les nouvelles valeurs
-            stmt.setString(1, facture.getChemin());
-            stmt.setString(2, facture.getNomFichier());
-            stmt.setFloat(3, facture.getTva());
-            stmt.setFloat(4, facture.getPrix());
-            stmt.setInt(5, facture.getIdFactures()); // Indication de l'ID pour la clause WHERE
+            stmt.setInt(1,idFacture);
+            stmt.setString(2, chemin);
+            stmt.setString(3, nomFichier);
+            stmt.setFloat(3, tva);
+            stmt.setFloat(4, prix);
             stmt.executeUpdate(); // Exécution de l'UPDATE
+
+        }catch(SQLException e){
+            System.out.println("Erreur lors de la modification de la facture : " + e.getMessage());
         }
     }
 
@@ -117,11 +128,13 @@ public class FactureDAO {
      * @param id L'identifiant unique de la facture à supprimer
      * @throws SQLException En cas d'erreur lors de l'exécution de la requête SQL
      */
-    public void supprimerFacture(int id) throws SQLException {
+    public void supprimerFacture(int id){
         String sql = "DELETE FROM factures WHERE id_factures = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id); // Passage de l'ID de la facture à supprimer
             stmt.executeUpdate();
+        }catch(SQLException e){
+            System.out.println("Erreur lors de la suppression de la facture : " + e.getMessage());
         }
     }
 }

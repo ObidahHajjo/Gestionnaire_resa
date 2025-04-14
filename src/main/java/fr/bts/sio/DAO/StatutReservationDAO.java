@@ -31,7 +31,7 @@ public class StatutReservationDAO {
      * @param statutReservation L'objet StatutReservation contenant les nouvelles valeurs
      * @throws SQLException En cas d'erreur SQL
      */
-    public void updateStatutReservation(StatutReservation statutReservation) throws SQLException {
+    public void modifierStatutReservation(StatutReservation statutReservation) throws SQLException {
         String sql = "UPDATE statut_reservation SET id_statut=?, libelle=? WHERE id_statut =? ";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -55,7 +55,7 @@ public class StatutReservationDAO {
      * @return Une liste contenant tous les objets StatutReservation
      * @throws SQLException En cas d'erreur SQL
      */
-    public List<StatutReservation> getAllStatutReservations() throws SQLException {
+    public List<StatutReservation> chercherToutStatutReservations() throws SQLException {
         List<StatutReservation> statutResersvations = new ArrayList<>(); // Liste pour stocker les résultats
         String sql = "SELECT * FROM statut_reservation";                 // Requête pour récupérer tous les enregistrements
 
@@ -82,7 +82,7 @@ public class StatutReservationDAO {
      * @return L'objet `StatutReservation` contenant les données correspondantes, ou null si non trouvé
      * @throws SQLException En cas d'erreur SQL
      */
-    public StatutReservation getStatutReservationById(int id) throws SQLException {
+    public StatutReservation chercherStatutReservationParId(int id) throws SQLException {
         String sql = "SELECT * FROM statut_reservation WHERE id_statut =? "; // Requête SQL pour chercher par ID
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {

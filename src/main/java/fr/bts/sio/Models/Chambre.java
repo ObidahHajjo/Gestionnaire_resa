@@ -2,12 +2,12 @@ package fr.bts.sio.Models;
 public class Chambre {
 
     private int idChambre;
-    private int numeroChambre;
+    private String numeroChambre;
     private Reservation reservation;
     private TypeChambre typeChambre;
 
     //constructor
-    public Chambre(int idChambre, int numeroChambre, Reservation reservation, TypeChambre typeChambre) {
+    public Chambre(int idChambre, String numeroChambre, Reservation reservation, TypeChambre typeChambre) {
         this.idChambre = idChambre;
         this.numeroChambre = numeroChambre;
         this.reservation = reservation;
@@ -22,7 +22,7 @@ public class Chambre {
         return idChambre;
     }
 
-    public int getNumeroChambre() {
+    public String getNumeroChambre() {
         return numeroChambre;
     }
 
@@ -39,7 +39,7 @@ public class Chambre {
         this.idChambre = idChambre;
     }
 
-    public void setNumeroChambre(int numeroChambre) {
+    public void setNumeroChambre(String numeroChambre) {
         this.numeroChambre = numeroChambre;
     }
 

@@ -49,7 +49,7 @@ public class FactureController {
      */
     public void afficherToutesLesFactures() {
         try {
-            List<Facture> factures = factureDAO.getAllFactures(); // Récupère toutes les factures
+            List<Facture> factures = factureDAO.chercherToutesFactures(); // Récupère toutes les factures
             for (Facture f : factures) {
                 System.out.println(f); // Affiche chaque facture (via toString())
             }
