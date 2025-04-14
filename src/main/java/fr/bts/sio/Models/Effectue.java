@@ -1,5 +1,9 @@
 package fr.bts.sio.Models;
 
+/**
+ * Modèle représentant l'opération d'effet d'un type de paiement sur une facture donnée.
+ * Il relie une facture et le type de paiement utilisé pour cette facture.
+ */
 public class Effectue {
     private Facture facture;
     private TypePaiement typePaiement;

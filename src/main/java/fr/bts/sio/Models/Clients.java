@@ -1,5 +1,9 @@
 package fr.bts.sio.Models;
 
+/**
+ * Modèle représentant un client.
+ * Chaque client est caractérisé par son nom, prénom, numéro de téléphone et adresse email.
+ */
 public class Clients {
 
     private int idClient;

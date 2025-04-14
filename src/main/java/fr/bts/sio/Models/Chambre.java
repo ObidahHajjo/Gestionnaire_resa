@@ -1,4 +1,9 @@
 package fr.bts.sio.Models;
+
+/**
+ * Modèle représentant une chambre dans le système.
+ * Chaque chambre est associée à un numéro, une réservation et un type de chambre.
+ */
 public class Chambre {
 
     private int idChambre;
