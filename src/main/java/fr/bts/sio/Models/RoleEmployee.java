@@ -1,5 +1,9 @@
 package fr.bts.sio.Models;
 
+/**
+ * Modèle représentant un rôle attribué à un employé.
+ * Un rôle se compose d'un identifiant unique et d'un libellé décrivant le rôle.
+ */
 public class RoleEmployee {
 
     private int idRole;

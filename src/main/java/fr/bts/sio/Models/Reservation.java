@@ -2,6 +2,11 @@ package fr.bts.sio.Models;
 
 import java.util.Date;
 
+/**
+ * Modèle représentant une réservation.
+ * Une réservation contient plusieurs détails comme l'identifiant, dates de début et de fin,
+ * nombre de personnes, petit-déjeuner, employé associé, facture, statut de la réservation, et le client.
+ */
 public class Reservation {
 
     private int idRes;

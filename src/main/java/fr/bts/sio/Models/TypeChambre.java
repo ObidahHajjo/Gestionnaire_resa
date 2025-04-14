@@ -1,5 +1,10 @@
 package fr.bts.sio.Models;
 
+/**
+ * Modèle représentant un type de chambre.
+ * Un type de chambre est caractérisé par un identifiant unique et un libellé décrivant le type
+ * (par exemple : "Simple", "Double", "Suite").
+ */
 public class TypeChambre {
 
     private int idTypeChambre;

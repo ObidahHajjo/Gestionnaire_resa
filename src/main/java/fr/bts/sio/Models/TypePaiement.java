@@ -1,5 +1,9 @@
 package fr.bts.sio.Models;
 
+/**
+ * Modèle représentant un type de paiement.
+ * Chaque type de paiement est défini par un identifiant unique et un libellé (par exemple : "Carte bancaire", "Espèces").
+ */
 public class TypePaiement {
 
     private int idTypePaiement;
