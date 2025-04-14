@@ -1,6 +1,8 @@
 package fr.bts.sio.DAO;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 // Importation des classes nécessaires pour l'interaction avec la base de données
 import fr.bts.sio.Models.Clients;
 
@@ -79,10 +81,23 @@ public class ClientsDAO {
      * @return Un objet `ResultSet` contenant tous les enregistrements des clients.
      *          Retourne `null` en cas d'échec de la requête.
      */
-    public ResultSet getAllClients() {
+    public List<Clients> getAllClients() {
         String query = "SELECT * FROM clients";
         try (Statement stmt = connection.createStatement()) {
-            return stmt.executeQuery(query);
+            ResultSet rs = stmt.executeQuery(query);
+            List<Clients> listeClients = new ArrayList<>();
+
+            while (rs.next()) {
+                Clients client = new Clients(
+                        rs.getInt("id_client"),
+                        rs.getString("nom"),
+                        rs.getString("prenom"),
+                        rs.getString("telephone"),
+                        rs.getString("email")
+                );
+                listeClients.add(client);
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

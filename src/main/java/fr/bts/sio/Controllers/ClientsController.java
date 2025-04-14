@@ -3,6 +3,7 @@ package fr.bts.sio.Controllers;
 import fr.bts.sio.Models.Clients;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import fr.bts.sio.DAO.ClientsDAO;
 
 import java.sql.Connection;
 import java.util.List;
@@ -44,7 +45,7 @@ public class ClientsController {
      * @param connection La connexion SQL pour initialiser le DAO
      */
     public ClientsController(Connection connection) {
-        this.clientsDAO = new ClientsDAO(connection);
+        this.clientsDAO = new ClientsDAO();
     }
 
     /**
