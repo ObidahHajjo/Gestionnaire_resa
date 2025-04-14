@@ -1,16 +1,13 @@
 package fr.bts.sio.Models;
-
-package Models;
-
 public class Chambre {
 
     private int idChambre;
     private int numeroChambre;
-    private Reservations reservation;
+    private Reservation reservation;
     private TypeChambre typeChambre;
 
     //constructor
-    public Chambre(int idChambre, int numeroChambre, Reservations reservation, TypeChambre typeChambre) {
+    public Chambre(int idChambre, int numeroChambre, Reservation reservation, TypeChambre typeChambre) {
         this.idChambre = idChambre;
         this.numeroChambre = numeroChambre;
         this.reservation = reservation;

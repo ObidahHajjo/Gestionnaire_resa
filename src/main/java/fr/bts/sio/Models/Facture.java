@@ -1,11 +1,27 @@
+package fr.bts.sio.Models;
+
+/**
+ * Modèle représentant une facture.
+ * Cette classe encapsule les informations liées à une facture,
+ * telles que son ID, son chemin, son nom de fichier, la TVA et le prix.
+ */
 public class Facture {
 
-    private int idFactures;
-    private String chemin;
-    private String nomFichier;
-    private float tva;
-    private float prix;
+    // Attributs de la classe
+    private int idFactures;       // Identifiant unique de la facture
+    private String chemin;        // Chemin du fichier de la facture
+    private String nomFichier;    // Nom du fichier de la facture
+    private float tva;            // Taux de TVA appliqué à la facture
+    private float prix;           // Prix total associé à la facture
 
+    /**
+     * Constructeur avec paramètres
+     * @param idFactures L'identifiant unique de la facture
+     * @param chemin Le chemin du fichier de la facture
+     * @param nomFichier Le nom du fichier de la facture
+     * @param tva Le taux de TVA appliqué
+     * @param prix Le prix total
+     */
     public Facture(int idFactures, String chemin, String nomFichier, float tva, float prix) {
         this.idFactures = idFactures;
         this.chemin = chemin;
@@ -14,10 +30,14 @@ public class Facture {
         this.prix = prix;
     }
 
+    /**
+     * Constructeur par défaut
+     * Permet de créer une facture sans initialisation d'attributs.
+     */
     public Facture() {
-
     }
 
+    // Getters : Méthodes pour accéder aux attributs (lecture uniquement)
     public int getIdFactures() {
         return idFactures;
     }
@@ -38,6 +58,7 @@ public class Facture {
         return prix;
     }
 
+    // Setters : Méthodes pour modifier les attributs (écriture)
     public void setIdFactures(int idFactures) {
         this.idFactures = idFactures;
     }
@@ -58,6 +79,11 @@ public class Facture {
         this.prix = prix;
     }
 
+    /**
+     * Méthode `toString`
+     * Utilisée pour afficher une représentation textuelle de la facture.
+     * @return Une chaîne de caractères décrivant la facture
+     */
     @Override
     public String toString() {
         return "Facture{" +

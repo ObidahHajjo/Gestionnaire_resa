@@ -8,6 +8,7 @@ module fr.bts.sio.gestionnaire_reservation {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires com.fasterxml.jackson.databind;
+    requires java.sql;
 
     opens fr.bts.sio.Config;
 }

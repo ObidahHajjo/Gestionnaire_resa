@@ -1,3 +1,5 @@
+package fr.bts.sio.Models;
+
 public class typePaiement {
 
     private int idTypePaiement;
