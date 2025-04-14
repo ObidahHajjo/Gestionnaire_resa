@@ -1,7 +1,4 @@
 package fr.bts.sio.Models;
-
-package Models;
-
 public class Chambre {
 
     private int idChambre;
