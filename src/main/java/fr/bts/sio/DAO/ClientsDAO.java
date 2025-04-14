@@ -34,7 +34,7 @@ public class ClientsDAO {
      * @param client L'objet `Clients` contenant les informations du client à ajouter.
      * @return `true` si l'insertion a réussi, `false` sinon.
      */
-    public boolean createClient(Clients client) {
+    public boolean ajouterClient(Clients client) {
         String query = "INSERT INTO clients(nom, prenom, telephone, email) VALUES(?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, client.getNom());
@@ -55,7 +55,7 @@ public class ClientsDAO {
      * @param idClient L'identifiant unique du client à récupérer.
      * @return Un objet `Clients` contenant les informations du client, ou `null` si non trouvé.
      */
-    public Clients getClientById(int idClient) {
+    public Clients chercherClientParId(int idClient) {
         String query = "SELECT * FROM clients WHERE id_client = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, idClient);
@@ -78,30 +78,29 @@ public class ClientsDAO {
     /**
      * Récupère tous les clients de la base de données.
      *
-     * @return Un objet `ResultSet` contenant tous les enregistrements des clients.
-     *          Retourne `null` en cas d'échec de la requête.
+     * @return Un objet `Une liste contenant toutes les clients.
      */
-    public List<Clients> getAllClients() {
+    public List<Clients> chercherTousLesClients() {
+        List<Clients> clients = new ArrayList<>();
         String query = "SELECT * FROM clients";
         try (Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
-            List<Clients> listeClients = new ArrayList<>();
-
             while (rs.next()) {
+                // Création et ajout d'un client à la liste
                 Clients client = new Clients(
-                        rs.getInt("id_client"),
+                        rs.getInt("id_clients"),
                         rs.getString("nom"),
                         rs.getString("prenom"),
                         rs.getString("telephone"),
                         rs.getString("email")
                 );
-                listeClients.add(client);
+                clients.add(client);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return clients;
     }
 
     /**
@@ -111,7 +110,7 @@ public class ClientsDAO {
      *               L'identifiant (`id_client`) doit déjà exister dans la base.
      * @return `true` si la mise à jour a réussi, `false` sinon.
      */
-    public boolean updateClient(Clients client) {
+    public boolean modifierClient(Clients client) {
         String query = "UPDATE clients SET nom = ?, prenom = ?, telephone = ?, email = ? WHERE id_client = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, client.getNom());
@@ -133,7 +132,7 @@ public class ClientsDAO {
      * @param idClient L'identifiant unique du client à supprimer.
      * @return `true` si la suppression a réussi, `false` sinon.
      */
-    public boolean deleteClient(int idClient) {
+    public boolean supprimerClient(int idClient) {
         String query = "DELETE FROM clients WHERE id_client = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, idClient);

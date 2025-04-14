@@ -50,7 +50,7 @@ public class FactureDAO {
      * @return Un objet Facture correspondant à l'ID, ou null si non trouvé
      * @throws SQLException En cas d'erreur lors de l'exécution de la requête SQL
      */
-    public Facture getFactureById(int id) throws SQLException {
+    public Facture chercherFactureParId(int id) throws SQLException {
         String sql = "SELECT * FROM factures WHERE id_factures = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id); // Passage de l'ID recherché
@@ -74,7 +74,7 @@ public class FactureDAO {
      * @return Une liste contenant toutes les factures
      * @throws SQLException En cas d'erreur lors de l'exécution de la requête SQL
      */
-    public List<Facture> getAllFactures() throws SQLException {
+    public List<Facture> chercherToutesLesFactures() throws SQLException {
         List<Facture> factures = new ArrayList<>();
         String sql = "SELECT * FROM factures";
         try (Statement stmt = connection.createStatement()) {
@@ -99,7 +99,7 @@ public class FactureDAO {
      * @param facture L'objet Facture contenant les nouvelles données
      * @throws SQLException En cas d'erreur lors de l'exécution de la requête SQL
      */
-    public void updateFacture(Facture facture) throws SQLException {
+    public void modifierFacture(Facture facture) throws SQLException {
         String sql = "UPDATE factures SET chemin = ?, nom_fichier = ?, tva = ?, prix = ? WHERE id_factures = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             // Mise à jour des champs avec les nouvelles valeurs
