@@ -1,5 +1,9 @@
 package fr.bts.sio.Models;
 
+/**
+ * Modèle représentant un employé.
+ * Chaque employé est caractérisé par son identifiant, nom, email, mot de passe et rôle.
+ */
 public class Employee {
 
     private int idEmployee;

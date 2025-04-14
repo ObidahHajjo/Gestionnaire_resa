@@ -34,7 +34,7 @@ public class ClientsDAO {
      * @param client L'objet `Clients` contenant les informations du client à ajouter.
      * @return `true` si l'insertion a réussi, `false` sinon.
      */
-    public boolean ajouterClient(Clients client) {
+    public boolean chercherClientParId(Clients client) {
         String query = "INSERT INTO clients(nom, prenom, telephone, email) VALUES(?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, client.getNom());
