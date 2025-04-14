@@ -1,5 +1,6 @@
 package fr.bts.sio.Controllers;
 
+import fr.bts.sio.DAO.ClientsDAO;
 import fr.bts.sio.Models.Clients;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -49,7 +50,7 @@ public class ClientsController {
     }
 
     /**
-     * Ajouter une client dans la base de données
+     * Ajouter un client dans la base de données
      * @param nom Le nom du client
      * @param prenom Le prénom du client
      * @param telephone Le numéro de téléphone du client
@@ -65,7 +66,7 @@ public class ClientsController {
      * Afficher toutes les clients existants
      */
     public void afficherTousLesClients() {
-        List<Clients> clients = clientsDAO.getAllClients(); // Récupère toutes les factures
+        List<Clients> clients = clientsDAO.chercherTousLesClients(); // Récupère toutes les factures
         for (Clients c : clients) {
             System.out.println(c); // Affiche chaque client (via toString())
         }
@@ -76,7 +77,7 @@ public class ClientsController {
      * @param id L'identifiant unique du client
      */
     public void afficherClientParId(int id) {
-        Clients c = clientsDAO.getClientById(id); // Récupère le client via son ID
+        Clients c = clientsDAO.chercherClientParId(id); // Récupère le client via son ID
         if (c != null) {
             System.out.println(c); // Affiche la facture trouvée
         } else {
@@ -93,7 +94,7 @@ public class ClientsController {
      * @param idClient L'identifiant de client à modifier
      */
     public void modifierClient(String nom, String prenom, String telephone, String email, int idClient) {
-        Clients clientExistant = clientsDAO.getClientById (idClient); // Récupère la facture existante
+        Clients clientExistant = clientsDAO.chercherClientParId(idClient); // Récupère la facture existante
         if (clientExistant != null) {
             // Mise à jour des données de la facture
             clientExistant.setNom(nom);
@@ -101,7 +102,7 @@ public class ClientsController {
             clientExistant.setTelephone(telephone);
             clientExistant.setEmail(email);
             clientExistant.setIdClient(idClient);
-            clientsDAO.updateClient(clientExistant); // Mise à jour dans la base via le DAO
+            clientsDAO.modifierClient(clientExistant); // Mise à jour dans la base via le DAO
             System.out.println("Client modifié !");
         } else {
             System.out.println("Aucun client trouvé avec l'ID " + idClient);
@@ -113,9 +114,9 @@ public class ClientsController {
      * @param idClient L'identifiant du client à supprimer
      */
     public void supprimerClient(int idClient) {
-        Clients c = clientsDAO.getClientById(idClient); // Récupère le client à supprimer
+        Clients c = clientsDAO.chercherClientParId(idClient); // Récupère le client à supprimer
         if (c != null) {
-            clientsDAO.deleteClient(idClient); // Supprime le client via le DAO
+            clientsDAO.supprimerClient(idClient); // Supprime le client via le DAO
             System.out.println("Le client " + idClient + " a été supprimée");
         } else {
             System.out.println("Aucun client trouvé avec l'ID " + idClient);

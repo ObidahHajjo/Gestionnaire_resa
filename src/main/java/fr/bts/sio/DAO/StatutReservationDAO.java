@@ -33,7 +33,6 @@ public class StatutReservationDAO {
     public void modifierStatutReservation(StatutReservation statutReservation) {
         // Requête SQL pour mettre à jour un statut existant
         String sql = "UPDATE statut_reservation SET id_statut=?, libelle=? WHERE id_statut=?";
-
         try {
             // Prépare la requête avec la connexion
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -68,7 +67,6 @@ public class StatutReservationDAO {
             Statement stmt = connection.createStatement();
             // Exécute la requête et récupère les résultats
             ResultSet rs = stmt.executeQuery(sql);
-
             // Parcourt chaque ligne du résultat
             while (rs.next()) {
                 // Crée un objet StatutReservation à partir des données
@@ -102,7 +100,6 @@ public class StatutReservationDAO {
             // Préparation de la requête SQL
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, id); // Définit la valeur du paramètre (id_statut)
-
             // Exécute la requête et récupère le résultat
             ResultSet rs = stmt.executeQuery();
 
@@ -136,7 +133,6 @@ public class StatutReservationDAO {
             // Préparation de la requête SQL
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, id); // Définit la valeur du paramètre (id_statut)
-
             // Exécute la requête de suppression
             stmt.executeUpdate();
         } catch (SQLException e) {

@@ -19,7 +19,7 @@ public class StatutReservationController {
     // Affiche tous les statuts existants
     public void afficherToutesLesReservations() {
         try {
-            List<StatutReservation> statutReservation = statutReservationDAO.getAllStatutReservations();
+            List<StatutReservation> statutReservation = statutReservationDAO.chercherTousLesStatutsReservations();
 
             if (statutReservation.isEmpty()) {
                 System.out.println("Aucun statut de réservation trouvé.");
@@ -37,7 +37,7 @@ public class StatutReservationController {
     // Affiche un statut spécifique par son id
     public void afficherStatutReservationParId(int id) {
         try{
-            StatutReservation s = statutReservationDAO.getStatutReservationById(id);
+            StatutReservation s = statutReservationDAO.chercherStatutReservationParId(id);
             if ( s != null){
                 System.out.println(s);
             } else{
@@ -50,11 +50,11 @@ public class StatutReservationController {
 
     public void modifierStatut(int id_statut, String libelle){
         try{
-            StatutReservation s = statutReservationDAO.getStatutReservationById(id_statut);
+            StatutReservation s = statutReservationDAO.chercherStatutReservationParId(id_statut);
             if ( s != null){
                 s.setIdStatut(id_statut);
                 s.setLibelle(libelle);
-                statutReservationDAO.updateStatutReservation(s);
+                statutReservationDAO.modifierStatutReservation(s);
                 System.out.println("Statut modifier");
             } else {
                 System.out.println("Statut non trouver avec l'ID " + id_statut);
