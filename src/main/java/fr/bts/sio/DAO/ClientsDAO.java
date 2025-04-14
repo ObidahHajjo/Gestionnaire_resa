@@ -4,10 +4,19 @@ import java.sql.*;
 // Importation des classes nécessaires pour l'interaction avec la base de données
 import fr.bts.sio.Models.Clients;
 
+/**
+ * La classe ClientsDAO fournit des méthodes pour interagir avec la base de données,
+ * permettant de gérer les entités `Clients`.
+ * Elle inclut des opérations telles que création, récupération, mise à jour et suppression
+ * des enregistrements clients dans la base de données.
+ */
 public class ClientsDAO {
     private Connection connection;
 
-    // Constructeur - initialisation de la connexion à la base de données
+    /**
+     * Constructeur pour initialiser la connexion à la base de données.
+     * Par défaut, la connexion est établie avec une base H2.
+     */
     public ClientsDAO() {
         try {
             // Se connecter à la base de données H2 (ajuste l'URL si nécessaire)
@@ -17,7 +26,12 @@ public class ClientsDAO {
         }
     }
 
-    // Méthode pour créer un nouveau client
+    /**
+     * Crée un nouveau client dans la base de données.
+     *
+     * @param client L'objet `Clients` contenant les informations du client à ajouter.
+     * @return `true` si l'insertion a réussi, `false` sinon.
+     */
     public boolean createClient(Clients client) {
         String query = "INSERT INTO clients(nom, prenom, telephone, email) VALUES(?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -33,7 +47,12 @@ public class ClientsDAO {
         return false;
     }
 
-    // Méthode pour récupérer un client par son ID
+    /**
+     * Récupère un client à partir de son identifiant unique.
+     *
+     * @param idClient L'identifiant unique du client à récupérer.
+     * @return Un objet `Clients` contenant les informations du client, ou `null` si non trouvé.
+     */
     public Clients getClientById(int idClient) {
         String query = "SELECT * FROM clients WHERE id_client = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -54,7 +73,12 @@ public class ClientsDAO {
         return null;
     }
 
-    // Méthode pour récupérer tous les clients
+    /**
+     * Récupère tous les clients de la base de données.
+     *
+     * @return Un objet `ResultSet` contenant tous les enregistrements des clients.
+     *          Retourne `null` en cas d'échec de la requête.
+     */
     public ResultSet getAllClients() {
         String query = "SELECT * FROM clients";
         try (Statement stmt = connection.createStatement()) {
@@ -65,7 +89,13 @@ public class ClientsDAO {
         return null;
     }
 
-    // Méthode pour mettre à jour un client
+    /**
+     * Met à jour les informations d'un client existant dans la base de données.
+     *
+     * @param client L'objet `Clients` contenant les informations mises à jour du client.
+     *               L'identifiant (`id_client`) doit déjà exister dans la base.
+     * @return `true` si la mise à jour a réussi, `false` sinon.
+     */
     public boolean updateClient(Clients client) {
         String query = "UPDATE clients SET nom = ?, prenom = ?, telephone = ?, email = ? WHERE id_client = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -82,7 +112,12 @@ public class ClientsDAO {
         return false;
     }
 
-    // Méthode pour supprimer un client
+    /**
+     * Supprime un client de la base de données.
+     *
+     * @param idClient L'identifiant unique du client à supprimer.
+     * @return `true` si la suppression a réussi, `false` sinon.
+     */
     public boolean deleteClient(int idClient) {
         String query = "DELETE FROM clients WHERE id_client = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
