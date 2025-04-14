@@ -35,7 +35,7 @@ public class EmployeeDAO {
      * @param employee L'objet `Employee` contenant les informations de l'employé à ajouter.
      * @return `true` si l'insertion a réussi, `false` sinon.
      */
-    public boolean createEmployee(Employee employee) {
+    public boolean chercherEmployeeParId(Employee employee) {
         String query = "INSERT INTO employee(nom_employee, email_emplyee, mdp_employee, id_role) VALUES(?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, employee.getNomEmployee());

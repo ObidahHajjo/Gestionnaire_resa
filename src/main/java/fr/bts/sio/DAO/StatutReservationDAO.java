@@ -1,13 +1,13 @@
 package fr.bts.sio.DAO;
 
 // Importations nécessaires pour le modèle et les interactions avec la base de données
-import fr.bts.sio.Models.StatutReservation;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import fr.bts.sio.Models.StatutReservation; // Classe modèle représentant le statut de réservation
+import java.sql.*; // Importation pour gérer les connexions et requêtes SQL
+import java.util.ArrayList; // Importation pour manipuler les listes
+import java.util.List; // Interface pour définir une liste générique
 
 /**
- * Classe `StatutReservationDAO` : Objet d'accès aux données
+ * Classe `StatutReservationDAO` : Objet d'Accès aux Données (DAO).
  * Cette classe gère toutes les opérations entre la table `statut_reservation`
  * dans la base de données et l'application Java.
  */
@@ -17,103 +17,131 @@ public class StatutReservationDAO {
     private Connection connection;
 
     /**
-     * Constructeur : Reçoit une connexion SQL établie d'une autre classe.
+     * Constructeur : Initialise la connexion à la base de données.
      *
-     * @param connection La connexion établie avec la base de données
+     * @param connection La connexion établie avec la base de données.
      */
     public StatutReservationDAO(Connection connection) {
-        this.connection = connection;
+        this.connection = connection; // Initialise l'attribut de connexion
     }
 
     /**
-     * Méthode pour mettre à jour les informations d'une réservation spécifique.
+     * Méthode pour modifier un statut de réservation existant dans la base de données.
      *
-     * @param statutReservation L'objet StatutReservation contenant les nouvelles valeurs
-     * @throws SQLException En cas d'erreur SQL
+     * @param statutReservation L'objet `StatutReservation` contenant les nouvelles valeurs.
      */
-    public void modifierStatutReservation(StatutReservation statutReservation) throws SQLException {
-        String sql = "UPDATE statut_reservation SET id_statut=?, libelle=? WHERE id_statut =? ";
+    public void modifierStatutReservation(StatutReservation statutReservation) {
+        // Requête SQL pour mettre à jour un statut existant
+        String sql = "UPDATE statut_reservation SET id_statut=?, libelle=? WHERE id_statut=?";
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            // Remplissage des paramètres de la requête
+        try {
+            // Prépare la requête avec la connexion
+            PreparedStatement stmt = connection.prepareStatement(sql);
+
+            // Définit les valeurs des paramètres :
             stmt.setString(1, statutReservation.getLibelle()); // Définit le libellé
-            stmt.setInt(2, statutReservation.getIdStatut());  // Définit l'ID du statut
-            stmt.setInt(3, statutReservation.getIdStatut());  // Condition WHERE (id_statut)
+            stmt.setInt(2, statutReservation.getIdStatut());  // Définit l'ID (dans SET)
+            stmt.setInt(3, statutReservation.getIdStatut());  // Définit l'ID (dans WHERE)
 
-            // Exécution de la requête
+            // Exécute la mise à jour
             stmt.executeUpdate();
         } catch (SQLException e) {
-            // Gestion et journalisation des erreurs SQL
-            System.err.println("Erreur lors de la mise à jour de statut : " + e.getMessage());
-            throw new SQLException("Impossible de mettre à jour le statut.", e);
+            // Capture et affiche les erreurs survenues lors de la mise à jour
+            System.err.println("Erreur lors de la mise à jour du statut : " + e.getMessage());
         }
     }
 
     /**
-     * Méthode pour récupérer toutes les réservations enregistrées dans la table.
+     * Méthode pour récupérer tous les statuts de réservation enregistrés dans la base de données.
      *
-     * @return Une liste contenant tous les objets StatutReservation
-     * @throws SQLException En cas d'erreur SQL
+     * @return Une liste contenant tous les objets `StatutReservation` récupérés.
      */
-    public List<StatutReservation> chercherToutStatutReservations() throws SQLException {
-        List<StatutReservation> statutResersvations = new ArrayList<>(); // Liste pour stocker les résultats
-        String sql = "SELECT * FROM statut_reservation";                 // Requête pour récupérer tous les enregistrements
+    public List<StatutReservation> chercherToutStatutReservations() {
+        // Liste pour stocker les statuts récupérés
+        List<StatutReservation> statutReservations = new ArrayList<>();
 
-        try (Statement stmt = connection.createStatement()) {
-            ResultSet rs = stmt.executeQuery(sql); // Exécution de la requête et récupération des résultats
+        // Requête SQL pour récupérer tous les enregistrements
+        String sql = "SELECT * FROM statut_reservation";
+
+        try {
+            // Crée un statement pour exécuter la requête
+            Statement stmt = connection.createStatement();
+            // Exécute la requête et récupère les résultats
+            ResultSet rs = stmt.executeQuery(sql);
+
+            // Parcourt chaque ligne du résultat
             while (rs.next()) {
-                // Création d'un objet StatutReservation pour chaque ligne du résultat
+                // Crée un objet StatutReservation à partir des données
                 StatutReservation statutReservation = new StatutReservation(
-                        rs.getInt("id_statut"),      // Récupération de l'ID
-                        rs.getString("libelle")      // Récupération du libellé
+                        rs.getInt("id_statut"), // Récupère la colonne `id_statut`
+                        rs.getString("libelle") // Récupère la colonne `libelle`
                 );
-                statutResersvations.add(statutReservation); // Stocke l'objet dans la liste
+                // Ajoute l'objet à la liste des résultats
+                statutReservations.add(statutReservation);
             }
+        } catch (SQLException e) {
+            // Capture et affiche les erreurs survenues lors de la récupération
+            System.out.println("Erreur lors de la recherche des statuts : " + e.getMessage());
         }
 
-        // Retourne la liste complète des statuts
-        return statutResersvations;
+        // Retourne la liste des statuts
+        return statutReservations;
     }
 
     /**
-     * Méthode pour récupérer un statut de réservation spécifique à partir de son ID.
+     * Méthode pour rechercher un statut de réservation spécifique par son identifiant.
      *
-     * @param id L'identifiant du statut de réservation recherché
-     * @return L'objet `StatutReservation` contenant les données correspondantes, ou null si non trouvé
-     * @throws SQLException En cas d'erreur SQL
+     * @param id L'identifiant du statut de réservation.
+     * @return Un objet `StatutReservation` correspondant, ou `null` si aucun statut n'est trouvé.
      */
-    public StatutReservation chercherStatutReservationParId(int id) throws SQLException {
-        String sql = "SELECT * FROM statut_reservation WHERE id_statut =? "; // Requête SQL pour chercher par ID
+    public StatutReservation chercherStatutReservationParId(int id) {
+        // Requête SQL pour rechercher un statut donné par son ID
+        String sql = "SELECT * FROM statut_reservation WHERE id_statut=?";
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, id); // Définit le paramètre pour la condition WHERE
-            ResultSet rs = stmt.executeQuery(); // Exécution de la requête
+        try {
+            // Préparation de la requête SQL
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, id); // Définit la valeur du paramètre (id_statut)
 
+            // Exécute la requête et récupère le résultat
+            ResultSet rs = stmt.executeQuery();
+
+            // Vérifie si un résultat est trouvé
             if (rs.next()) {
-                // Si une ligne est trouvée, retourne un objet StatutReservation
+                // Crée et retourne un objet StatutReservation si une ligne est trouvée
                 return new StatutReservation(
-                        rs.getInt("id_statut"),   // Récupère l'ID
-                        rs.getString("libelle")   // Récupère le libellé
+                        rs.getInt("id_statut"), // Récupère la colonne `id_statut`
+                        rs.getString("libelle") // Récupère la colonne `libelle`
                 );
             }
+        } catch (SQLException e) {
+            // Capture et affiche les erreurs survenues lors de la recherche
+            System.out.println("Erreur lors de la recherche du statut : " + e.getMessage());
         }
 
-        // Retourne null si aucune ligne correspondante n'a été trouvée
+        // Retourne `null` si aucun résultat n'a été trouvé
         return null;
     }
 
     /**
-     * Méthode pour supprimer un statut de réservation à partir de son ID.
+     * Méthode pour supprimer un statut de réservation de la base de données par son identifiant.
      *
-     * @param id L'ID du statut de réservation à supprimer
-     * @throws SQLException En cas d'erreur SQL
+     * @param id L'identifiant du statut de réservation à supprimer.
      */
-    public void deleteStatutReservation(int id) throws SQLException {
-        String sql = "DELETE FROM statut_reservation WHERE id_statut =? "; // Requête SQL pour suppression
+    public void deleteStatutReservation(int id) {
+        // Requête SQL pour supprimer un statut par son ID
+        String sql = "DELETE FROM statut_reservation WHERE id_statut=?";
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, id); // Définit le paramètre pour la condition WHERE
-            stmt.executeUpdate(); // Exécute la requête DELETE
+        try {
+            // Préparation de la requête SQL
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, id); // Définit la valeur du paramètre (id_statut)
+
+            // Exécute la requête de suppression
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            // Capture et affiche les erreurs survenues lors de la suppression
+            System.out.println("Erreur lors de la suppression du statut : " + e.getMessage());
         }
     }
 }

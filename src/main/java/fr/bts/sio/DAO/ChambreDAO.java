@@ -5,45 +5,74 @@ import fr.bts.sio.Models.Reservation;
 import fr.bts.sio.Models.TypeChambre;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
+/**
+ * Classe `ChambreDAO` :
+ * Cette classe est responsable de l'accès aux données pour le modèle `Chambre`.
+ * Elle fournit des méthodes CRUD (Create, Read, Update, Delete) pour gérer
+ * les chambres dans la base de données.
+ */
 public class ChambreDAO {
 
-    // Attribut représentant la connexion à la base de données
+    // La connexion active avec la base de données
     private Connection connection;
 
+    /**
+     * Constructeur
+     *
+     * @param connection Connexion active à la base de données.
+     */
     public ChambreDAO(Connection connection) {
         this.connection = connection;
-
     }
 
+    /**
+     * CREATE : Ajouter une nouvelle chambre dans la base de données.
+     *
+     * @param numero_chambre  Numéro de la chambre (identifiant unique dans l'hôtel).
+     * @param id_type_chambre Identifiant du type de la chambre (relation avec TypeChambreDAO).
+     * @param id_res          Identifiant de la réservation associée (relation avec ReservationDAO).
+     */
     public void ajouteChambre(String numero_chambre, int id_type_chambre, int id_res) {
         String sql = "INSERT INTO chambres (numero_chambre, id_type_chambre, id_res) VALUES (?, ?, ?)";
 
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            // Remplace les (?) par les données de l'objet 'chambres'
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            // Replacer les "?" par les données passées en paramètres
             stmt.setString(1, numero_chambre);
-            stmt.setInt(2,id_type_chambre);
-            stmt.setFloat(3,id_res);
+            stmt.setInt(2, id_type_chambre);
+            stmt.setInt(3, id_res); // Correction de `setFloat` -> `setInt`
+            stmt.executeUpdate(); // Exécution de la requête d'ajout
         } catch (SQLException e) {
-            System.out.println("Erreur de lors de l'ajoute de la chambre :  " + e.getMessage());
+            System.out.println("Erreur lors de l'ajout de la chambre : " + e.getMessage());
         }
     }
 
+    /**
+     * READ (1) : Trouver une chambre par son ID.
+     *
+     * @param id_chambre Identifiant unique de la chambre.
+     * @return L'objet `Chambre` correspondant à l'ID ou `null` si non trouvé.
+     */
     public Chambre chercherChambreParId(int id_chambre) {
         String sql = "SELECT * FROM chambres WHERE id_chambre = ?";
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, id_chambre);
-            ResultSet rs = stmt.executeQuery();
-            ReservationDAO ReservationDAO = new ReservationDAO(connection);
-            TypeChambreDAO TypeChambreDAO = new TypeChambreDAO(connection);
 
-            if(rs.next()){
-                Reservation res = ReservationDAO.chercherReservationParId(rs.getInt("id_res"));
-                TypeChambre type = TypeChambreDAO.chercherTypeChambreParId(rs.getInt("id_type_chambre"));
+            ResultSet rs = stmt.executeQuery();
+            ReservationDAO reservationDAO = new ReservationDAO(connection);
+            TypeChambreDAO typeChambreDAO = new TypeChambreDAO(connection);
+
+            if (rs.next()) {
+                // Récupère les relations nécessaires (Reservation et TypeChambre)
+                Reservation res = reservationDAO.chercherReservationParId(rs.getInt("id_res"));
+                TypeChambre type = typeChambreDAO.chercherTypeChambreParId(rs.getInt("id_type_chambre"));
+
+                // Crée un objet Chambre à partir des données récupérées
                 return new Chambre(
                         rs.getInt("id_chambre"),
                         rs.getString("numero_chambre"),
@@ -52,62 +81,87 @@ public class ChambreDAO {
                 );
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération de la chambre : " + e.getMessage());
+            System.out.println("Erreur lors de la recherche de la chambre : " + e.getMessage());
         }
-        return null;
+        return null; // Retourne null si pas trouvé
     }
 
+    /**
+     * READ (2) : Récupérer toutes les chambres dans la base de données.
+     *
+     * @return Une liste contenant toutes les chambres.
+     */
     public List<Chambre> chercherToutesChambres() {
-        List<Chambre> chambres = new java.util.ArrayList<>();
-
+        List<Chambre> chambres = new ArrayList<>();
         String sql = "SELECT * FROM chambres";
-        try (Statement stmt = connection.createStatement()) {
+
+        try {
+            Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
-            ReservationDAO ReservationDAO = new ReservationDAO(connection);
-            TypeChambreDAO TypeChambreDAO = new TypeChambreDAO(connection);
+            // Initialisation des DAO pour récupérer les relations
+            ReservationDAO reservationDAO = new ReservationDAO(connection);
+            TypeChambreDAO typeChambreDAO = new TypeChambreDAO(connection);
 
-            while (rs.next()){
-                Reservation res = ReservationDAO.chercherReservationParId(rs.getInt("id_res"));
-                TypeChambre type = TypeChambreDAO.chercherTypeChambreParId(rs.getInt("id_type_chambre"));
-                Chambre Chambre = new Chambre(
+            while (rs.next()) {
+                // Récupère les relations pour chaque chambre
+                Reservation res = reservationDAO.chercherReservationParId(rs.getInt("id_res"));
+                TypeChambre type = typeChambreDAO.chercherTypeChambreParId(rs.getInt("id_type_chambre"));
+
+                // Crée un objet Chambre et l'ajoute à la liste
+                Chambre chambre = new Chambre(
                         rs.getInt("id_chambre"),
                         rs.getString("numero_chambre"),
                         res,
                         type
                 );
-                chambres.add(Chambre);
+                chambres.add(chambre);
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors du traitement de la recherche des chambres : " + e.getMessage());
-        }return chambres;
+            System.out.println("Erreur lors de la récupération des chambres : " + e.getMessage());
+        }
+        return chambres; // Retourne la liste complète des chambres
     }
 
+    /**
+     * UPDATE : Modifier une chambre existante dans la base de données.
+     *
+     * @param id_chambre     Identifiant unique de la chambre à modifier.
+     * @param numero_chambre Nouveau numéro de la chambre.
+     * @param id_type_chambre Nouvel identifiant du type de la chambre.
+     * @param id_res         Nouvel identifiant de la réservation associée.
+     */
     public void modifierChambre(int id_chambre, String numero_chambre, int id_type_chambre, int id_res) {
         String sql = "UPDATE chambres SET numero_chambre = ?, id_type_chambre = ?, id_res = ? WHERE id_chambre = ?";
 
-        try(PreparedStatement stmt = connection.prepareStatement(sql)){
-            stmt.setInt(1, id_chambre);
-            stmt.setString(2, numero_chambre);
-            stmt.setInt(3, id_type_chambre);
-            stmt.setInt(4, id_res);
-            stmt.executeUpdate();
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
 
-        } catch(SQLException e){
-            System.out.println("Erreur de modification de la chambre : " + e.getMessage());
+            // Remplacer les valeurs dans la requête avec les nouvelles données
+            stmt.setString(1, numero_chambre);
+            stmt.setInt(2, id_type_chambre);
+            stmt.setInt(3, id_res);
+            stmt.setInt(4, id_chambre);
+            stmt.executeUpdate(); // Exécution de la requête UPDATE
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la modification de la chambre : " + e.getMessage());
         }
-
     }
 
+    /**
+     * DELETE : Supprimer une chambre par son ID.
+     *
+     * @param id_chambre Identifiant unique de la chambre à supprimer.
+     */
     public void supprimerChambre(int id_chambre) {
         String sql = "DELETE FROM chambres WHERE id_chambre = ?";
 
-        try(PreparedStatement stmt = connection.prepareStatement(sql)){
-            stmt.setInt(1, id_chambre);
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, id_chambre); // Remplace "?" par l'ID de la chambre
             stmt.executeUpdate();
-        } catch(SQLException e){
-            System.out.println("Erreur de suppression de la chambre : " + e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la suppression de la chambre : " + e.getMessage());
         }
     }
-
 }
