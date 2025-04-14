@@ -2,12 +2,6 @@ package fr.bts.sio;
 
 import fr.bts.sio.Config.Config;
 import fr.bts.sio.Config.ConfigManager;
-import fr.bts.sio.DB;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 public class App {
 
