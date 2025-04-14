@@ -2,8 +2,8 @@ package fr.bts.sio.Models;
 
 /**
  * Modèle représentant une facture.
- * Cette classe encapsule les informations liées à une facture,
- * telles que son ID, son chemin, son nom de fichier, la TVA et le prix.
+ * Chaque facture contient des informations comme son identifiant, chemin du fichier, nom du fichier,
+ * taux de TVA et le prix total.
  */
 public class Facture {
 

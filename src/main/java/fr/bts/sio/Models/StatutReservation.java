@@ -1,5 +1,9 @@
 package fr.bts.sio.Models;
 
+/**
+ * Modèle représentant le statut d'une réservation.
+ * Le statut permet d'indiquer l'état actuel d'une réservation (par exemple : en cours, annulée, terminée).
+ */
 public class StatutReservation {
 
     private int idStatut;
