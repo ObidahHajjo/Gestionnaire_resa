@@ -6,6 +6,9 @@ import fr.bts.sio.Config.ConfigManager;
 public class App {
 
     public static void main(String[] args) throws Exception {
+        /* DB */
+        DB db = new DB();
+        db.start();
 
         /* TVA */
         ConfigManager.load("Storage/config.json");          // interpreter le fichier config.json

@@ -1,16 +1,16 @@
 package fr.bts.sio.Models;
 
-public class typePaiement {
+public class TypePaiement {
 
     private int idTypePaiement;
     private String libelle;
 
-    public typePaiement(int idTypePaiement, String libelle) {
+    public TypePaiement(int idTypePaiement, String libelle) {
         this.idTypePaiement = idTypePaiement;
         this.libelle = libelle;
     }
 
-    public typePaiement() {
+    public TypePaiement() {
     }
 
     public int getIdTypePaiement() {

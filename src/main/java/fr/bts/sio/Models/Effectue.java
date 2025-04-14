@@ -2,9 +2,9 @@ package fr.bts.sio.Models;
 
 public class Effectue {
     private Facture facture;
-    private typePaiement typePaiement;
+    private TypePaiement typePaiement;
 
-    public Effectue(Facture facture, fr.bts.sio.Models.typePaiement typePaiement) {
+    public Effectue(Facture facture, TypePaiement typePaiement) {
         this.facture = facture;
         this.typePaiement = typePaiement;
     }
@@ -16,7 +16,7 @@ public class Effectue {
         return facture;
     }
 
-    public fr.bts.sio.Models.typePaiement getTypePaiement() {
+    public TypePaiement getTypePaiement() {
         return typePaiement;
     }
 
@@ -24,7 +24,7 @@ public class Effectue {
         this.facture = facture;
     }
 
-    public void setTypePaiement(fr.bts.sio.Models.typePaiement typePaiement) {
+    public void setTypePaiement(TypePaiement typePaiement) {
         this.typePaiement = typePaiement;
     }
 
