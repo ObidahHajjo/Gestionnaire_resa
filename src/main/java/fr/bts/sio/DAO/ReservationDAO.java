@@ -36,6 +36,7 @@ public class ReservationDAO {
      * @param idStatut       ID du statut de la réservation.
      * @param idClient       ID du client ayant effectué la réservation.
      */
+
     public Reservation ajouteReservation(Date dateResDebut, Date dateResFin, int nombresPersonnes, int petitDejeuner,
                                   int idEmployee, int idFactures, int idStatut, int idClient) {
         // Requête SQL pour insérer une réservation
