@@ -1,5 +1,6 @@
 package fr.bts.sio.DAO;
 
+import fr.bts.sio.Interface.RoleEmployeeDAOInterface;
 import fr.bts.sio.Models.Facture;
 import fr.bts.sio.Models.RoleEmployee;
 import java.sql.*;
@@ -11,7 +12,7 @@ import java.util.List;
  * de données et gérer les entités `RoleEmployee`. Elle inclut des opérations
  * pour créer, récupérer, mettre à jour et supprimer des rôles.
  */
-public class RoleEmployeeDAO {
+public class RoleEmployeeDAO implements RoleEmployeeDAOInterface {
 
     private Connection connection;
 
@@ -34,6 +35,7 @@ public class RoleEmployeeDAO {
      * @param role L'objet `RoleEmployee` contenant les informations du rôle à ajouter.
      * @return `true` si l'insertion a réussi, `false` sinon.
      */
+    @Override
     public boolean ajouterRole(RoleEmployee role) {
         String query = "INSERT INTO role_employee(libelle) VALUES(?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -52,6 +54,7 @@ public class RoleEmployeeDAO {
      * @param idRole L'identifiant unique du rôle à récupérer.
      * @return Un objet `RoleEmployee` contenant les informations du rôle, ou `null` si non trouvé.
      */
+    @Override
     public RoleEmployee chercherRoleParId(int idRole) {
         String query = "SELECT * FROM role_employee WHERE id_role = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -75,6 +78,7 @@ public class RoleEmployeeDAO {
      * @return Un objet `ResultSet` contenant les enregistrements des rôles.
      *         Retourne `null` si la requête échoue.
      */
+    @Override
     public List<RoleEmployee> chercherTousLesRoles() {
         List<RoleEmployee> roles = new ArrayList<>();
         String query = "SELECT * FROM role_employee";
@@ -100,6 +104,7 @@ public class RoleEmployeeDAO {
      * @param role L'objet `RoleEmployee` contenant les nouvelles informations du rôle.
      * @return `true` si la mise à jour a réussi, `false` sinon.
      */
+    @Override
     public boolean modifierRole(RoleEmployee role) {
         String query = "UPDATE role_employee SET libelle = ? WHERE id_role = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -119,6 +124,7 @@ public class RoleEmployeeDAO {
      * @param idRole L'identifiant unique du rôle à supprimer.
      * @return `true` si la suppression a réussi, `false` sinon.
      */
+    @Override
     public boolean supprimerRole(int idRole) {
         String query = "DELETE FROM role_employee WHERE id_role = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {

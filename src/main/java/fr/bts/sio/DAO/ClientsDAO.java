@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 // Importation des classes nécessaires pour l'interaction avec la base de données
+import fr.bts.sio.Interface.ClientsDAOInterface;
 import fr.bts.sio.Models.Clients;
 
 /**
@@ -12,7 +13,7 @@ import fr.bts.sio.Models.Clients;
  * Elle inclut des opérations telles que création, récupération, mise à jour et suppression
  * des enregistrements clients dans la base de données.
  */
-public class ClientsDAO {
+public class ClientsDAO implements ClientsDAOInterface {
     private Connection connection;
 
     /**
@@ -32,7 +33,9 @@ public class ClientsDAO {
      * @param email L'email du client.
      * @return objet `Client` si l'insertion a réussi, `null` sinon.
      */
+    @Override
     public Clients AjouterClient(String nom,String prenom, String telephone,String email ) {
+
         String query = "INSERT INTO clients(nom, prenom, telephone, email) VALUES(?, ?, ?, ?)";
         try{
             PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -58,6 +61,7 @@ public class ClientsDAO {
      * @param idClient L'identifiant unique du client à récupérer.
      * @return Un objet `Clients` contenant les informations du client, ou `null` si non trouvé.
      */
+    @Override
     public Clients chercherClientParId(int idClient) {
         String query = "SELECT * FROM clients WHERE id_client = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -83,6 +87,7 @@ public class ClientsDAO {
      *
      * @return Un objet `Une liste contenant toutes les clients.
      */
+    @Override
     public List<Clients> chercherTousLesClients() {
         List<Clients> clients = new ArrayList<>();
         String query = "SELECT * FROM clients";
@@ -116,6 +121,7 @@ public class ClientsDAO {
      * @param email L'email du client.
      * @return `true` si la mise à jour a réussi, `false` sinon.
      */
+    @Override
     public boolean modifierClient(int idClient, String nom, String prenom, String telephone, String email) {
         String query = "UPDATE clients SET nom = ?, prenom = ?, telephone = ?, email = ? WHERE id_client = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -137,6 +143,7 @@ public class ClientsDAO {
      * @param idClient L'identifiant unique du client à supprimer.
      * @return `true` si la suppression a réussi, `false` sinon.
      */
+    @Override
     public boolean supprimerClient(int idClient) {
         String query = "DELETE FROM clients WHERE id_client = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {

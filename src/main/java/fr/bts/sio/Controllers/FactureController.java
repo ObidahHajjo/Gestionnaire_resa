@@ -34,24 +34,24 @@ public class FactureController {
      */
     public void ajouterFacture(String chemin, String nomFichier, float prix) {
         Facture f = new Facture(0, chemin, nomFichier, prix); // Création d'un objet Facture
-
-            factureDAO.ajouterFacture(chemin, nomFichier, prix); // Ajout de la facture dans la base via le DAO
-            if (f != null ) {
-                System.out.println("Facture ajoutée avec succès !");
-            }else {
-                System.out.println("Erreur lors de l'ajout : ");
-            }
-
+        factureDAO.ajouterFacture(chemin, nomFichier, prix); // Ajout de la facture dans la base via le DAO
+        System.out.println("Facture ajoutée avec succès !");
     }
 
     /**
      * Afficher toutes les factures existantes
      */
     public void afficherToutesLesFactures() {
+
             List<Facture> factures = factureDAO.chercherToutesFactures(); // Récupère toutes les factures
             for (Facture f : factures) {
                 System.out.println(f); // Affiche chaque facture (via toString())
             }
+            if (factures != null){
+
+
+            System.out.println("Erreur lors de l'affichage : ");
+        }
     }
 
     /**
@@ -59,12 +59,14 @@ public class FactureController {
      * @param id L'identifiant unique de la facture
      */
     public void afficherFactureParId(int id) {
+
             Facture f = factureDAO.chercherFactureParId(id); // Récupère la facture via son ID
             if (f != null) {
                 System.out.println(f); // Affiche la facture trouvée
             } else {
                 System.out.println("Aucune facture trouvée avec l'ID " + id);
             }
+
     }
 
     /**
@@ -75,6 +77,8 @@ public class FactureController {
      * @param idFactures L'identifiant de la facture à modifier
      */
     public void modifierFacture(String chemin, String NomFichier, float prix, int idFactures) {
+
+
             Facture factureExistante = factureDAO.chercherFactureParId(idFactures); // Récupère la facture existante
             if (factureExistante != null) {
                 // Mise à jour des données de la facture
@@ -83,10 +87,12 @@ public class FactureController {
                 factureExistante.setPrix(prix);
                 factureExistante.setIdFactures(idFactures);
                 //factureDAO.modifierFacture(); // Mise à jour dans la base via le DAO
+               // factureDAO.ajouterFacture(factureExistante); // Mise à jour dans la base via le DAO
                 System.out.println("Facture modifiée !");
             } else {
                 System.out.println("Aucune facture trouvée avec l'ID " + idFactures);
             }
+
     }
 
     /**
@@ -94,6 +100,7 @@ public class FactureController {
      * @param idFactures L'identifiant de la facture à supprimer
      */
     public void supprimerFacture(int idFactures) {
+
             Facture f = factureDAO.chercherFactureParId(idFactures); // Récupère la facture à supprimer
             if (f != null) {
                 factureDAO.supprimerFacture(idFactures); // Supprime la facture via le DAO
@@ -101,6 +108,7 @@ public class FactureController {
             } else {
                 System.out.println("Aucune facture trouvée avec l'ID " + idFactures);
             }
+
     }
 }
 

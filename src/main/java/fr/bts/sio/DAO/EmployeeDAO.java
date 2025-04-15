@@ -1,5 +1,6 @@
 package fr.bts.sio.DAO;
 
+import fr.bts.sio.Interface.EmployeeDAOInterface;
 import fr.bts.sio.Models.Employee;
 import fr.bts.sio.Models.Facture;
 import fr.bts.sio.Models.RoleEmployee;
@@ -13,7 +14,7 @@ import java.util.List;
  * telles que la création, la récupération, la mise à jour et la suppression
  * des employés.
  */
-public class EmployeeDAO {
+public class EmployeeDAO implements EmployeeDAOInterface {
 
     private Connection connection;
 
@@ -33,6 +34,7 @@ public class EmployeeDAO {
      * @param employee L'objet `Employee` contenant les informations de l'employé à ajouter.
      * @return `true` si l'insertion a réussi, `false` sinon.
      */
+    @Override
     public boolean ajouterEmployee(Employee employee) {
         String query = "INSERT INTO employee(nom_employee, email_emplyee, mdp_employee, id_role) VALUES(?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -55,6 +57,7 @@ public class EmployeeDAO {
      * @param idEmployee L'identifiant unique de l'employé à récupérer.
      * @return Un objet `Employee` contenant les informations de l'employé, ou `null` si non trouvé.
      */
+    @Override
     public Employee chercherEmployeeParId(int idEmployee) {
         String query = "SELECT e.id_employee, e.nom_employee, e.email_employee, e.mdp_employee, r.id_role, r.libelle " +
                 "FROM employee e " +
@@ -86,6 +89,7 @@ public class EmployeeDAO {
      * @return Une liste contenant tous les  employés.
      *         Retourne `null` en cas d'échec.
      */
+    @Override
     public List<Employee> chercherTousLesEmployees() {
         List<Employee> employees = new ArrayList<>();
         String query = "SELECT e.id_employee, e.nom_employee, e.email_employee, e.mdp_employee, r.id_role, r.libelle " +
@@ -124,6 +128,7 @@ public class EmployeeDAO {
      * @param idRole L'identifiant du rôle de l'employé.
      * @return `true` si la mise à jour a réussi, `false` sinon.
      */
+    @Override
     public boolean modifierEmployee(int idEmployee, String nomEmployee, String emailEmployee, String mdpEmployee, int idRole) {
         String query = "UPDATE employee SET nom_employee = ?, email_emplyee = ?, mdp_employee = ?, id_role = ? WHERE id_empmoyee = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -147,6 +152,7 @@ public class EmployeeDAO {
      * @param idEmployee L'identifiant unique de l'employé à supprimer.
      * @return `true` si la suppression a réussi, `false` sinon.
      */
+    @Override
     public boolean supprimerEmployee(int idEmployee) {
         String query = "DELETE FROM employee WHERE id_empmoyee = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -164,6 +170,7 @@ public class EmployeeDAO {
      * @param email
      * @return objet 'Employee"
      */
+    @Override
     public Employee chercherEmployeeParEmail(String email) {
         try{
             String sql = "SELECt * FROM employee WHERE email_emplyee = ?";

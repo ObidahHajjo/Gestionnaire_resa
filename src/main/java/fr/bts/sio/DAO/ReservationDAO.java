@@ -1,5 +1,6 @@
 package fr.bts.sio.DAO;
 
+import fr.bts.sio.Interface.ReservationDAOInterface;
 import fr.bts.sio.Models.*;
 
 import java.sql.*;
@@ -10,7 +11,7 @@ import java.util.List;
  * Cette classe gère toutes les opérations CRUD (Create, Read, Update, Delete)
  * pour la table `reservations` dans la base de données.
  */
-public class ReservationDAO {
+public class ReservationDAO implements ReservationDAOInterface {
 
     // Attribut représente la connexion à la base de données
     private Connection connection;
@@ -36,7 +37,7 @@ public class ReservationDAO {
      * @param idStatut       ID du statut de la réservation.
      * @param idClient       ID du client ayant effectué la réservation.
      */
-
+    @Override
     public Reservation ajouteReservation(Date dateResDebut, Date dateResFin, int nombresPersonnes, int petitDejeuner,
                                   int idEmployee, int idFactures, int idStatut, int idClient) {
         // Requête SQL pour insérer une réservation
@@ -94,6 +95,7 @@ public class ReservationDAO {
      * @param idRes ID de la réservation recherché.
      * @return Un objet `Reservation` si trouvé, sinon `null`.
      */
+    @Override
     public Reservation chercherReservationParId(int idRes) {
         // Requête SQL pour chercher une réservation par ID
         String sql = "SELECT * FROM reservations WHERE idRes = ?";
@@ -143,6 +145,7 @@ public class ReservationDAO {
      *
      * @return Une liste contenant toutes les réservations.
      */
+    @Override
     public List<Reservation> chercherToutesLesReservations() {
         // Liste pour stocker les réservations trouvées
         List<Reservation> reservations = new java.util.ArrayList<>();
@@ -201,6 +204,7 @@ public class ReservationDAO {
      * @param idStatut       ID du statut.
      * @param idClient       ID du client.
      */
+    @Override
     public Reservation modifierReservation(int idRes, Date dateResDebut, Date dateResFin, int nombresPersonnes, int petitDejeuner,
                                     int idEmployee, int idFactures, int idStatut, int idClient) {
         // Requête SQL pour mettre à jour une réservation
@@ -254,6 +258,7 @@ public class ReservationDAO {
      *
      * @param idRes ID de la réservation à supprimer.
      */
+    @Override
     public boolean supprimerReservation(int idRes) {
         // Requête SQL pour suppression
         String sql = "DELETE FROM reservations WHERE id_res = ?";
