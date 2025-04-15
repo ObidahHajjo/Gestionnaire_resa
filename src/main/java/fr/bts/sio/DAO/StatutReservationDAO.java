@@ -44,7 +44,8 @@ public class StatutReservationDAO {
 
             // Exécute la mise à jour
             stmt.executeUpdate();
-            return new StatutReservation(idStatut, libelle);
+            StatutReservation st = new StatutReservation(idStatut, libelle);
+            return st;
         } catch (SQLException e) {
             // Capture et affiche les erreurs survenues lors de la mise à jour
             System.out.println("Erreur lors de la mise à jour du statut : " + e.getMessage());
