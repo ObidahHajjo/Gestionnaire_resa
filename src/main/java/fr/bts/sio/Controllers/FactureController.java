@@ -30,18 +30,18 @@ public class FactureController {
      * Ajouter une facture dans la base de données
      * @param chemin Le chemin du fichier de la facture
      * @param nomFichier Le nom du fichier
-     * @param tva La TVA appliquée
      * @param prix Le prix total de la facture
      */
-    public void ajouterFacture(String chemin, String nomFichier, float tva, float prix) {
-        Facture f = new Facture(0, chemin, nomFichier, tva, prix); // Création d'un objet Facture
-        try {
-            factureDAO.ajouterFacture(f); // Ajout de la facture dans la base via le DAO
-            System.out.println("Facture ajoutée avec succès !");
-        } catch (SQLException e) {
-            // Gestion des erreurs SQL lors de l'ajout
-            System.out.println("Erreur lors de l'ajout : " + e.getMessage());
-        }
+    public void ajouterFacture(String chemin, String nomFichier, float prix) {
+        Facture f = new Facture(0, chemin, nomFichier, prix); // Création d'un objet Facture
+
+            factureDAO.ajouterFacture(chemin, nomFichier, prix); // Ajout de la facture dans la base via le DAO
+            if (f != null ) {
+                System.out.println("Facture ajoutée avec succès !");
+            }else {
+                System.out.println("Erreur lors de l'ajout : ");
+            }
+
     }
 
     /**
@@ -65,7 +65,7 @@ public class FactureController {
      */
     public void afficherFactureParId(int id) {
         try {
-            Facture f = factureDAO.getFactureById(id); // Récupère la facture via son ID
+            Facture f = factureDAO.chercherFactureParId(id); // Récupère la facture via son ID
             if (f != null) {
                 System.out.println(f); // Affiche la facture trouvée
             } else {
@@ -87,7 +87,7 @@ public class FactureController {
      */
     public void modifierFacture(String chemin, String NomFichier, float tva, float prix, int idFactures) {
         try {
-            Facture factureExistante = factureDAO.getFactureById(idFactures); // Récupère la facture existante
+            Facture factureExistante = factureDAO.chercherFactureParId(idFactures); // Récupère la facture existante
             if (factureExistante != null) {
                 // Mise à jour des données de la facture
                 factureExistante.setChemin(chemin);
@@ -112,7 +112,7 @@ public class FactureController {
      */
     public void supprimerFacture(int idFactures) {
         try {
-            Facture f = factureDAO.getFactureById(idFactures); // Récupère la facture à supprimer
+            Facture f = factureDAO.chercherFactureParId(idFactures); // Récupère la facture à supprimer
             if (f != null) {
                 factureDAO.supprimerFacture(idFactures); // Supprime la facture via le DAO
                 System.out.println("La facture " + idFactures + " a été supprimée");

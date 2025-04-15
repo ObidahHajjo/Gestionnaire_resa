@@ -35,19 +35,35 @@ public class ChambreDAO {
      * @param id_type_chambre Identifiant du type de la chambre (relation avec TypeChambreDAO).
      * @param id_res          Identifiant de la réservation associée (relation avec ReservationDAO).
      */
-    public void ajouteChambre(String numero_chambre, int id_type_chambre, int id_res) {
-        String sql = "INSERT INTO chambres (numero_chambre, id_type_chambre, id_res) VALUES (?, ?, ?)";
+    public Chambre ajouteChambre(String numero_chambre, int id_type_chambre, int id_res) {
+        String sql = "INSERT INTO chambres (numeroChambre, idTypeChambre, idRes) VALUES (?, ?, ?)";
 
         try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
+            PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             // Replacer les "?" par les données passées en paramètres
             stmt.setString(1, numero_chambre);
             stmt.setInt(2, id_type_chambre);
             stmt.setInt(3, id_res); // Correction de `setFloat` -> `setInt`
             stmt.executeUpdate(); // Exécution de la requête d'ajout
+
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            int idChambre = 0;
+            if (generatedKeys.next()) {
+                idChambre = generatedKeys.getInt(1);
+            }
+
+            // Création de l'objet Chambre
+            TypeChambreDAO tc = new TypeChambreDAO(connection);
+            TypeChambre typeChambre = tc.chercherTypeChambreParId(id_type_chambre);
+
+            ReservationDAO r = new ReservationDAO(connection);
+            Reservation reservation = r.chercherReservationParId(id_res);
+
+            Chambre chambre = new Chambre(idChambre, numero_chambre, reservation, typeChambre);
+            return chambre;
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'ajout de la chambre : " + e.getMessage());
-        }
+        }return null;
     }
 
     /**
@@ -131,7 +147,7 @@ public class ChambreDAO {
      * @param id_type_chambre Nouvel identifiant du type de la chambre.
      * @param id_res         Nouvel identifiant de la réservation associée.
      */
-    public void modifierChambre(int id_chambre, String numero_chambre, int id_type_chambre, int id_res) {
+    public Chambre modifierChambre(int id_chambre, String numero_chambre, int id_type_chambre, int id_res) {
         String sql = "UPDATE chambres SET numero_chambre = ?, id_type_chambre = ?, id_res = ? WHERE id_chambre = ?";
 
         try {
@@ -143,9 +159,17 @@ public class ChambreDAO {
             stmt.setInt(3, id_res);
             stmt.setInt(4, id_chambre);
             stmt.executeUpdate(); // Exécution de la requête UPDATE
+
+            TypeChambreDAO tc = new TypeChambreDAO(connection);
+            TypeChambre typeChambre = tc.chercherTypeChambreParId(id_type_chambre);
+            ReservationDAO r = new ReservationDAO(connection);
+            Reservation reservation = r.chercherReservationParId(id_res);
+
+            Chambre c = new Chambre(id_chambre, numero_chambre, reservation, typeChambre);
+            return c;
         } catch (SQLException e) {
             System.out.println("Erreur lors de la modification de la chambre : " + e.getMessage());
-        }
+        } return null;
     }
 
     /**
@@ -153,15 +177,16 @@ public class ChambreDAO {
      *
      * @param id_chambre Identifiant unique de la chambre à supprimer.
      */
-    public void supprimerChambre(int id_chambre) {
+    public boolean supprimerChambre(int id_chambre) {
         String sql = "DELETE FROM chambres WHERE id_chambre = ?";
 
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, id_chambre); // Remplace "?" par l'ID de la chambre
             stmt.executeUpdate();
+            return true;
         } catch (SQLException e) {
             System.out.println("Erreur lors de la suppression de la chambre : " + e.getMessage());
-        }
+        }return false;
     }
 }

@@ -1,8 +1,11 @@
 package fr.bts.sio.DAO;
 
 import fr.bts.sio.Models.Employee;
+import fr.bts.sio.Models.Facture;
 import fr.bts.sio.Models.RoleEmployee;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * La classe EmployeeDAO fournit des méthodes pour interagir avec la base de
@@ -35,7 +38,7 @@ public class EmployeeDAO {
      * @param employee L'objet `Employee` contenant les informations de l'employé à ajouter.
      * @return `true` si l'insertion a réussi, `false` sinon.
      */
-    public boolean chercherEmployeeParId(Employee employee) {
+    public boolean ajouterEmployee(Employee employee) {
         String query = "INSERT INTO employee(nom_employee, email_emplyee, mdp_employee, id_role) VALUES(?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, employee.getNomEmployee());
@@ -57,20 +60,20 @@ public class EmployeeDAO {
      * @param idEmployee L'identifiant unique de l'employé à récupérer.
      * @return Un objet `Employee` contenant les informations de l'employé, ou `null` si non trouvé.
      */
-    public Employee getEmployeeById(int idEmployee) {
-        String query = "SELECT e.id_empmoyee, e.nom_employee, e.email_emplyee, e.mdp_employee, r.id_role, r.libelle " +
+    public Employee chercherEmployeeParId(int idEmployee) {
+        String query = "SELECT e.id_employee, e.nom_employee, e.email_employee, e.mdp_employee, r.id_role, r.libelle " +
                 "FROM employee e " +
                 "JOIN role_employee r ON e.id_role = r.id_role " +
-                "WHERE e.id_empmoyee = ?";
+                "WHERE e.id_employee = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, idEmployee);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 RoleEmployee role = new RoleEmployee(rs.getInt("id_role"), rs.getString("libelle"));
                 return new Employee(
-                        rs.getInt("id_empmoyee"),
+                        rs.getInt("id_employee"),
                         rs.getString("nom_employee"),
-                        rs.getString("email_emplyee"),
+                        rs.getString("email_employee"),
                         rs.getString("mdp_employee"),
                         role
                 );
@@ -85,20 +88,35 @@ public class EmployeeDAO {
     /**
      * Récupère tous les employés de la base de données.
      *
-     * @return Un objet `ResultSet` contenant tous les enregistrements des employés.
+     * @return Une liste contenant tous les  employés.
      *         Retourne `null` en cas d'échec.
      */
-    public ResultSet getAllEmployees() {
-        String query = "SELECT e.id_empmoyee, e.nom_employee, e.email_emplyee, e.mdp_employee, r.id_role, r.libelle " +
+    public List<Employee> chercherTousLesEmployees() {
+        List<Employee> employees = new ArrayList<>();
+        String query = "SELECT e.id_employee, e.nom_employee, e.email_employee, e.mdp_employee, r.id_role, r.libelle " +
                 "FROM employee e " +
                 "JOIN role_employee r ON e.id_role = r.id_role";
         try (Statement stmt = connection.createStatement()) {
-            return stmt.executeQuery(query);
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                // Création et ajout d'un employe à la liste
+                RoleEmployeeDAO roleEmployeeDAO = new RoleEmployeeDAO();
+                Employee employee = new Employee(
+                        rs.getInt("id_employee"),
+                        rs.getString("nom_employee"),
+                        rs.getString("nom_fichier"),
+                        rs.getString("email_employee"),
+                        roleEmployeeDAO.getRoleById(rs.getInt("id_role");
+                );
+                employees.add(employee);
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return employees;
     }
+
 
     // Méthode pour mettre à jour un employé
     /**
@@ -107,7 +125,7 @@ public class EmployeeDAO {
      * @param employee L'objet `Employee` contenant les informations mises à jour de l'employé.
      * @return `true` si la mise à jour a réussi, `false` sinon.
      */
-    public boolean updateEmployee(Employee employee) {
+    public boolean modifierEmployee(Employee employee) {
         String query = "UPDATE employee SET nom_employee = ?, email_emplyee = ?, mdp_employee = ?, id_role = ? WHERE id_empmoyee = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, employee.getNomEmployee());
@@ -130,7 +148,7 @@ public class EmployeeDAO {
      * @param idEmployee L'identifiant unique de l'employé à supprimer.
      * @return `true` si la suppression a réussi, `false` sinon.
      */
-    public boolean deleteEmployee(int idEmployee) {
+    public boolean supprimerEmployee(int idEmployee) {
         String query = "DELETE FROM employee WHERE id_empmoyee = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, idEmployee);

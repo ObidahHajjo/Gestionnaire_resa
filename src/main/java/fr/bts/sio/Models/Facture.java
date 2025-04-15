@@ -11,7 +11,6 @@ public class Facture {
     private int idFactures;       // Identifiant unique de la facture
     private String chemin;        // Chemin du fichier de la facture
     private String nomFichier;    // Nom du fichier de la facture
-    private float tva;            // Taux de TVA appliqué à la facture
     private float prix;           // Prix total associé à la facture
 
     /**
@@ -19,14 +18,12 @@ public class Facture {
      * @param idFactures L'identifiant unique de la facture
      * @param chemin Le chemin du fichier de la facture
      * @param nomFichier Le nom du fichier de la facture
-     * @param tva Le taux de TVA appliqué
      * @param prix Le prix total
      */
-    public Facture(int idFactures, String chemin, String nomFichier, float tva, float prix) {
+    public Facture(int idFactures, String chemin, String nomFichier, float prix) {
         this.idFactures = idFactures;
         this.chemin = chemin;
         this.nomFichier = nomFichier;
-        this.tva = tva;
         this.prix = prix;
     }
 
@@ -50,9 +47,6 @@ public class Facture {
         return nomFichier;
     }
 
-    public float getTva() {
-        return tva;
-    }
 
     public float getPrix() {
         return prix;
@@ -71,9 +65,6 @@ public class Facture {
         this.nomFichier = nomFichier;
     }
 
-    public void setTva(float tva) {
-        this.tva = tva;
-    }
 
     public void setPrix(float prix) {
         this.prix = prix;
@@ -90,7 +81,7 @@ public class Facture {
                 "idFactures=" + idFactures +
                 ", chemin='" + chemin + '\'' +
                 ", nomFichier='" + nomFichier + '\'' +
-                ", tva=" + tva +
+                ", tva=" +
                 ", prix=" + prix +
                 '}';
     }
