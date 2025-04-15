@@ -34,28 +34,23 @@ public class FactureController {
      */
     public void ajouterFacture(String chemin, String nomFichier, float prix) {
         Facture f = new Facture(0, chemin, nomFichier, prix); // Création d'un objet Facture
-
-            factureDAO.ajouterFacture(chemin, nomFichier, prix); // Ajout de la facture dans la base via le DAO
-            if (f != null ) {
-                System.out.println("Facture ajoutée avec succès !");
-            }else {
-                System.out.println("Erreur lors de l'ajout : ");
-            }
-
+        factureDAO.ajouterFacture(chemin, nomFichier, prix); // Ajout de la facture dans la base via le DAO
+        System.out.println("Facture ajoutée avec succès !");
     }
 
     /**
      * Afficher toutes les factures existantes
      */
     public void afficherToutesLesFactures() {
-        try {
+
             List<Facture> factures = factureDAO.chercherToutesFactures(); // Récupère toutes les factures
             for (Facture f : factures) {
                 System.out.println(f); // Affiche chaque facture (via toString())
             }
-        } catch (SQLException e) {
-            // Gestion des erreurs SQL lors de la récupération
-            System.out.println("Erreur lors de l'affichage : " + e.getMessage());
+            if (factures != null){
+
+
+            System.out.println("Erreur lors de l'affichage : ");
         }
     }
 
@@ -64,46 +59,38 @@ public class FactureController {
      * @param id L'identifiant unique de la facture
      */
     public void afficherFactureParId(int id) {
-        try {
+
             Facture f = factureDAO.chercherFactureParId(id); // Récupère la facture via son ID
             if (f != null) {
                 System.out.println(f); // Affiche la facture trouvée
             } else {
                 System.out.println("Aucune facture trouvée avec l'ID " + id);
             }
-        } catch (SQLException e) {
-            // Gestion des erreurs SQL lors de l'opération
-            System.out.println("Erreur lors de la récupération : " + e.getMessage());
-        }
+
     }
 
     /**
      * Modifier une facture existante
      * @param chemin Nouveau chemin du fichier
      * @param NomFichier Nouveau nom du fichier
-     * @param tva Nouvelle TVA
      * @param prix Nouveau prix
      * @param idFactures L'identifiant de la facture à modifier
      */
-    public void modifierFacture(String chemin, String NomFichier, float tva, float prix, int idFactures) {
-        try {
+    public void modifierFacture(String chemin, String NomFichier, float prix, int idFactures) {
+
             Facture factureExistante = factureDAO.chercherFactureParId(idFactures); // Récupère la facture existante
             if (factureExistante != null) {
                 // Mise à jour des données de la facture
                 factureExistante.setChemin(chemin);
                 factureExistante.setNomFichier(NomFichier);
-                factureExistante.setTva(tva);
                 factureExistante.setPrix(prix);
                 factureExistante.setIdFactures(idFactures);
-                factureDAO.updateFacture(factureExistante); // Mise à jour dans la base via le DAO
+               // factureDAO.ajouterFacture(factureExistante); // Mise à jour dans la base via le DAO
                 System.out.println("Facture modifiée !");
             } else {
                 System.out.println("Aucune facture trouvée avec l'ID " + idFactures);
             }
-        } catch (SQLException e) {
-            // Gestion des erreurs SQL lors de la modification
-            System.out.println("Erreur lors de la modification : " + e.getMessage());
-        }
+
     }
 
     /**
@@ -111,7 +98,7 @@ public class FactureController {
      * @param idFactures L'identifiant de la facture à supprimer
      */
     public void supprimerFacture(int idFactures) {
-        try {
+
             Facture f = factureDAO.chercherFactureParId(idFactures); // Récupère la facture à supprimer
             if (f != null) {
                 factureDAO.supprimerFacture(idFactures); // Supprime la facture via le DAO
@@ -119,10 +106,7 @@ public class FactureController {
             } else {
                 System.out.println("Aucune facture trouvée avec l'ID " + idFactures);
             }
-        } catch (SQLException e) {
-            // Gestion des erreurs SQL lors de la suppression
-            System.out.println("Erreur lors de la suppression : " + e.getMessage());
-        }
+
     }
 }
 

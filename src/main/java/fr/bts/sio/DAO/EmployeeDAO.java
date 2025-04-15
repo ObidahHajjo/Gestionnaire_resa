@@ -96,17 +96,19 @@ public class EmployeeDAO {
         String query = "SELECT e.id_employee, e.nom_employee, e.email_employee, e.mdp_employee, r.id_role, r.libelle " +
                 "FROM employee e " +
                 "JOIN role_employee r ON e.id_role = r.id_role";
+        // Création et ajout d'un employe à la liste
         try (Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
+            RoleEmployeeDAO roleEmployeeDAO = new RoleEmployeeDAO();
             while (rs.next()) {
-                // Création et ajout d'un employe à la liste
-                RoleEmployeeDAO roleEmployeeDAO = new RoleEmployeeDAO();
+                RoleEmployee role = roleEmployeeDAO.chercherRoleParId(rs.getInt("id_role"));
+
                 Employee employee = new Employee(
                         rs.getInt("id_employee"),
                         rs.getString("nom_employee"),
                         rs.getString("nom_fichier"),
                         rs.getString("email_employee"),
-                        roleEmployeeDAO.getRoleById(rs.getInt("id_role");
+                        role
                 );
                 employees.add(employee);
             }

@@ -58,7 +58,7 @@ public class ClientsController {
      */
     public void ajouterClient(String nom, String prenom, String telephone, String email) {
         Clients c = new Clients(0, nom, prenom, telephone, email); // Création d'un objet Clients
-        clientsDAO.createClient(c); // Ajout de la facture dans la base via le DAO
+        clientsDAO.ajouterClients(c); // Ajout de la facture dans la base via le DAO
         System.out.println("Client ajouté avec succès !");
     }
 

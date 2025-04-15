@@ -18,4 +18,5 @@ public class App {
         ConfigManager.save();                                    // Sauvgarder la modification
         System.out.println(ConfigManager.get().getTva());
     }
+
 }
