@@ -46,7 +46,7 @@ public class ClientsController {
      * @param connection La connexion SQL pour initialiser le DAO
      */
     public ClientsController(Connection connection) {
-        this.clientsDAO = new ClientsDAO();
+        this.clientsDAO = new ClientsDAO(connection);
     }
 
     /**
@@ -58,7 +58,7 @@ public class ClientsController {
      */
     public void ajouterClient(String nom, String prenom, String telephone, String email) {
         Clients c = new Clients(0, nom, prenom, telephone, email); // Création d'un objet Clients
-        clientsDAO.ajouterClients(c); // Ajout de la facture dans la base via le DAO
+        clientsDAO.AjouterClient(nom,prenom,telephone,email); // Ajout de la facture dans la base via le DAO
         System.out.println("Client ajouté avec succès !");
     }
 
@@ -102,7 +102,7 @@ public class ClientsController {
             clientExistant.setTelephone(telephone);
             clientExistant.setEmail(email);
             clientExistant.setIdClient(idClient);
-            clientsDAO.modifierClient(clientExistant); // Mise à jour dans la base via le DAO
+            //clientsDAO.modifierClient(clientExistant); // Mise à jour dans la base via le DAO
             System.out.println("Client modifié !");
         } else {
             System.out.println("Aucun client trouvé avec l'ID " + idClient);

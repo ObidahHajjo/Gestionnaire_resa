@@ -78,6 +78,7 @@ public class FactureController {
      */
     public void modifierFacture(String chemin, String NomFichier, float prix, int idFactures) {
 
+
             Facture factureExistante = factureDAO.chercherFactureParId(idFactures); // Récupère la facture existante
             if (factureExistante != null) {
                 // Mise à jour des données de la facture
@@ -85,6 +86,7 @@ public class FactureController {
                 factureExistante.setNomFichier(NomFichier);
                 factureExistante.setPrix(prix);
                 factureExistante.setIdFactures(idFactures);
+                //factureDAO.modifierFacture(); // Mise à jour dans la base via le DAO
                // factureDAO.ajouterFacture(factureExistante); // Mise à jour dans la base via le DAO
                 System.out.println("Facture modifiée !");
             } else {
