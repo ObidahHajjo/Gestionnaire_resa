@@ -106,7 +106,7 @@ public class EmployeeDAO {
                         rs.getString("nom_employee"),
                         rs.getString("nom_fichier"),
                         rs.getString("email_employee"),
-                        roleEmployeeDAO.getRoleById(rs.getInt("id_role");
+                        roleEmployeeDAO.chercherRoleParId(rs.getInt("id_role"))
                 );
                 employees.add(employee);
             }
@@ -122,17 +122,21 @@ public class EmployeeDAO {
     /**
      * Met à jour les informations d'un employé existant dans la base de données.
      *
-     * @param employee L'objet `Employee` contenant les informations mises à jour de l'employé.
+     * @param idEmployee L'identifiant de l'employé.
+     * @param nomEmployee Le nom de l'employé.
+     * @param emailEmployee L'email de l'employé.
+     * @param mdpEmployee Le mot de passe de l'employé.
+     * @param idRole L'identifiant du rôle de l'employé.
      * @return `true` si la mise à jour a réussi, `false` sinon.
      */
-    public boolean modifierEmployee(Employee employee) {
+    public boolean modifierEmployee(int idEmployee, String nomEmployee, String emailEmployee, String mdpEmployee, int idRole) {
         String query = "UPDATE employee SET nom_employee = ?, email_emplyee = ?, mdp_employee = ?, id_role = ? WHERE id_empmoyee = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, employee.getNomEmployee());
-            stmt.setString(2, employee.getEmailEmployee());
-            stmt.setString(3, employee.getMdpEmployee());
-            stmt.setInt(4, employee.getRole().getIdRole()); // Assurez-vous que le rôle existe
-            stmt.setInt(5, employee.getIdEmployee());
+            stmt.setString(1, nomEmployee);
+            stmt.setString(2, emailEmployee);
+            stmt.setString(3, mdpEmployee);
+            stmt.setInt(4, idRole); // Utilisation de l'identifiant du rôle
+            stmt.setInt(5, idEmployee);
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {

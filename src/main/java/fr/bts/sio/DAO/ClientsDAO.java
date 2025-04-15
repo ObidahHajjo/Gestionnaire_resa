@@ -31,16 +31,19 @@ public class ClientsDAO {
     /**
      * Crée un nouveau client dans la base de données.
      *
-     * @param client L'objet `Clients` contenant les informations du client à ajouter.
+     * @param nom Le nom du client.
+     * @param prenom Le prénom du client.
+     * @param telephone Le numéro de téléphone du client.
+     * @param email L'email du client.
      * @return `true` si l'insertion a réussi, `false` sinon.
      */
-    public boolean chercherClientParId(Clients client) {
+    public boolean ajouterClient(String nom, String prenom, String telephone, String email) {
         String query = "INSERT INTO clients(nom, prenom, telephone, email) VALUES(?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, client.getNom());
-            stmt.setString(2, client.getPrenom());
-            stmt.setString(3, client.getTelephone());
-            stmt.setString(4, client.getEmail());
+            stmt.setString(1, nom);
+            stmt.setString(2, prenom);
+            stmt.setString(3, telephone);
+            stmt.setString(4, email);
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -106,18 +109,20 @@ public class ClientsDAO {
     /**
      * Met à jour les informations d'un client existant dans la base de données.
      *
-     * @param client L'objet `Clients` contenant les informations mises à jour du client.
-     *               L'identifiant (`id_client`) doit déjà exister dans la base.
+     * @param idClient L'identifiant du client.
+     * @param nom Le nom du client.
+     * @param prenom Le prénom du client.
+     * @param telephone Le numéro de téléphone du client.
+     * @param email L'email du client.
      * @return `true` si la mise à jour a réussi, `false` sinon.
      */
-    public boolean modifierClient(Clients client) {
+    public boolean modifierClient(int idClient, String nom, String prenom, String telephone, String email) {
         String query = "UPDATE clients SET nom = ?, prenom = ?, telephone = ?, email = ? WHERE id_client = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, client.getNom());
-            stmt.setString(2, client.getPrenom());
-            stmt.setString(3, client.getTelephone());
-            stmt.setString(4, client.getEmail());
-            stmt.setInt(5, client.getIdClient());
+            stmt.setString(1, nom);
+            stmt.setString(2, prenom);
+            stmt.setString(3, telephone);
+            stmt.setString(4, email);
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
