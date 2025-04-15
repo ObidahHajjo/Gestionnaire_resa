@@ -28,25 +28,24 @@ public class StatutReservationDAO {
     /**
      * Méthode pour modifier un statut de réservation existant dans la base de données.
      *
-     * @param statutReservation L'objet `StatutReservation` contenant les nouvelles valeurs.
+     * @param idStatut L'objet `StatutReservation` contenant les nouvelles valeurs.
      */
-    public void modifierStatutReservation(StatutReservation statutReservation) {
+    public void modifierStatutReservation(int idStatut, String libelle) {
         // Requête SQL pour mettre à jour un statut existant
-        String sql = "UPDATE statut_reservation SET id_statut=?, libelle=? WHERE id_statut=?";
+        String sql = "UPDATE statut_reservation SET libelle=? WHERE idStatut=?";
         try {
             // Prépare la requête avec la connexion
             PreparedStatement stmt = connection.prepareStatement(sql);
 
             // Définit les valeurs des paramètres :
-            stmt.setString(1, statutReservation.getLibelle()); // Définit le libellé
-            stmt.setInt(2, statutReservation.getIdStatut());  // Définit l'ID (dans SET)
-            stmt.setInt(3, statutReservation.getIdStatut());  // Définit l'ID (dans WHERE)
+            stmt.setInt(1, idStatut); // Définit l'ID (dans WHERE)
+            stmt.setString(2, libelle);  // Définit le libellé
 
             // Exécute la mise à jour
             stmt.executeUpdate();
         } catch (SQLException e) {
             // Capture et affiche les erreurs survenues lors de la mise à jour
-            System.err.println("Erreur lors de la mise à jour du statut : " + e.getMessage());
+            System.out.println("Erreur lors de la mise à jour du statut : " + e.getMessage());
         }
     }
 
@@ -125,7 +124,7 @@ public class StatutReservationDAO {
      *
      * @param id L'identifiant du statut de réservation à supprimer.
      */
-    public void deleteStatutReservation(int id) {
+    public void supprimerStatutReservation(int id) {
         // Requête SQL pour supprimer un statut par son ID
         String sql = "DELETE FROM statut_reservation WHERE id_statut=?";
 
