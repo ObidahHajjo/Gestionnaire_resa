@@ -30,9 +30,10 @@ public class StatutReservationDAO {
      *
      * @param idStatut L'objet `StatutReservation` contenant les nouvelles valeurs.
      */
-    public void modifierStatutReservation(int idStatut, String libelle) {
+    public StatutReservation modifierStatutReservation(int idStatut, String libelle) {
         // Requête SQL pour mettre à jour un statut existant
-        String sql = "UPDATE statut_reservation SET libelle=? WHERE idStatut=?";
+        String sql = "UPDATE statut_reservation SET libelle=? WHERE id_statut=?";
+
         try {
             // Prépare la requête avec la connexion
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -43,10 +44,12 @@ public class StatutReservationDAO {
 
             // Exécute la mise à jour
             stmt.executeUpdate();
+            StatutReservation st = new StatutReservation(idStatut, libelle);
+            return st;
         } catch (SQLException e) {
             // Capture et affiche les erreurs survenues lors de la mise à jour
             System.out.println("Erreur lors de la mise à jour du statut : " + e.getMessage());
-        }
+        } return null;
     }
 
     /**
@@ -54,7 +57,7 @@ public class StatutReservationDAO {
      *
      * @return Une liste contenant tous les objets `StatutReservation` récupérés.
      */
-    public List<StatutReservation> chercherToutStatutReservations() {
+    public List<StatutReservation> chercherTousStatutsReservations() {
         // Liste pour stocker les statuts récupérés
         List<StatutReservation> statutReservations = new ArrayList<>();
 
@@ -66,11 +69,12 @@ public class StatutReservationDAO {
             Statement stmt = connection.createStatement();
             // Exécute la requête et récupère les résultats
             ResultSet rs = stmt.executeQuery(sql);
+
             // Parcourt chaque ligne du résultat
             while (rs.next()) {
                 // Crée un objet StatutReservation à partir des données
                 StatutReservation statutReservation = new StatutReservation(
-                        rs.getInt("id_statut"), // Récupère la colonne `id_statut`
+                        rs.getInt("idStatut"), // Récupère la colonne `id_statut`
                         rs.getString("libelle") // Récupère la colonne `libelle`
                 );
                 // Ajoute l'objet à la liste des résultats
@@ -99,6 +103,7 @@ public class StatutReservationDAO {
             // Préparation de la requête SQL
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, id); // Définit la valeur du paramètre (id_statut)
+
             // Exécute la requête et récupère le résultat
             ResultSet rs = stmt.executeQuery();
 
@@ -106,7 +111,7 @@ public class StatutReservationDAO {
             if (rs.next()) {
                 // Crée et retourne un objet StatutReservation si une ligne est trouvée
                 return new StatutReservation(
-                        rs.getInt("id_statut"), // Récupère la colonne `id_statut`
+                        rs.getInt("idStatut"), // Récupère la colonne `id_statut`
                         rs.getString("libelle") // Récupère la colonne `libelle`
                 );
             }
@@ -124,7 +129,7 @@ public class StatutReservationDAO {
      *
      * @param id L'identifiant du statut de réservation à supprimer.
      */
-    public void supprimerStatutReservation(int id) {
+    public boolean supprimerStatutReservation(int id) {
         // Requête SQL pour supprimer un statut par son ID
         String sql = "DELETE FROM statut_reservation WHERE id_statut=?";
 
@@ -132,11 +137,13 @@ public class StatutReservationDAO {
             // Préparation de la requête SQL
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, id); // Définit la valeur du paramètre (id_statut)
+
             // Exécute la requête de suppression
             stmt.executeUpdate();
+            return true;
         } catch (SQLException e) {
             // Capture et affiche les erreurs survenues lors de la suppression
             System.out.println("Erreur lors de la suppression du statut : " + e.getMessage());
-        }
+        }return false;
     }
 }

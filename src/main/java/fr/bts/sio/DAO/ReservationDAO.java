@@ -31,52 +31,77 @@ public class ReservationDAO {
      * @param dateResFin      Date de fin de la réservation.
      * @param nombresPersonnes Le nombre de personnes pour la réservation.
      * @param petitDejeuner   Indique si le petit déjeuner est inclus.
-     * @param id_employee     ID de l'employé gérant cette réservation.
-     * @param id_factures     ID de la facture associée.
-     * @param id_statut       ID du statut de la réservation.
-     * @param id_client       ID du client ayant effectué la réservation.
+     * @param idEmployee     ID de l'employé gérant cette réservation.
+     * @param idFactures     ID de la facture associée.
+     * @param idStatut       ID du statut de la réservation.
+     * @param idClient       ID du client ayant effectué la réservation.
      */
-    public void ajouterReservation(Date dateResDebut, Date dateResFin, int nombresPersonnes, int petitDejeuner,
-                                  int id_employee, int id_factures, int id_statut, int id_client) {
+
+    public Reservation ajouteReservation(Date dateResDebut, Date dateResFin, int nombresPersonnes, int petitDejeuner,
+                                  int idEmployee, int idFactures, int idStatut, int idClient) {
         // Requête SQL pour insérer une réservation
-        String sql = "INSERT INTO reservations (dateResDebut, dateResFin, nombresPersonnes, petitDejeuner, " +
+        String sql = "INSERT INTO reservations (dateResDebut, dateResFin, nombres_personnes, petit_dejeuner, " +
                 "id_employee, id_factures, id_statut, id_client) VALUES (?,?,?,?,?,?,?,?)";
 
         try {
             // Préparation de la requête
-            PreparedStatement stmt = connection.prepareStatement(sql);
+            PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             // Définition des paramètres de la requête
             stmt.setDate(1, dateResDebut);
             stmt.setDate(2, dateResFin);
             stmt.setInt(3, nombresPersonnes);
             stmt.setInt(4, petitDejeuner);
-            stmt.setInt(5, id_employee);
-            stmt.setInt(6, id_factures);
-            stmt.setInt(7, id_statut);
-            stmt.setInt(8, id_client);
+            stmt.setInt(5, idEmployee);
+            stmt.setInt(6, idFactures);
+            stmt.setInt(7, idStatut);
+            stmt.setInt(8, idClient);
 
             // Exécution de la requête
             stmt.executeUpdate();
+
+            // Récupération de l'ID généré
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            int idRes = 0;
+            if (generatedKeys.next()) {
+                idRes = generatedKeys.getInt(1);
+            }
+            // Création d'un objet de Réservation
+            EmployeeDAO e = new EmployeeDAO();
+            Employee employee = e.chercherEmployeeParId(idEmployee);
+
+            FactureDAO f = new FactureDAO(connection);
+            Facture facture = f.chercherFactureParId(idFactures);
+
+            StatutReservationDAO s = new StatutReservationDAO(connection);
+            StatutReservation statutReservation = s.chercherStatutReservationParId(idStatut);
+
+            ClientsDAO c = new ClientsDAO();
+            Clients client = c.chercherClientParId(idClient);
+
+            Reservation rs = new Reservation(idRes, dateResDebut, dateResFin, nombresPersonnes, petitDejeuner,
+                    employee, facture, statutReservation, client);
+            System.out.println("Reservation ajouté avec succès : " + rs);
+            return rs;
         } catch (SQLException e) {
             // Affiche un message d'erreur en cas de problème
             System.out.println("Erreur lors de l'ajoute de la réservation : " + e.getMessage());
-        }
+        } return null;
     }
 
     /**
      * Recherche une réservation spécifique à partir de son identifiant.
      *
-     * @param id_reservation ID de la réservation recherché.
+     * @param idRes ID de la réservation recherché.
      * @return Un objet `Reservation` si trouvé, sinon `null`.
      */
-    public Reservation chercherReservationParId(int id_reservation) {
+    public Reservation chercherReservationParId(int idRes) {
         // Requête SQL pour chercher une réservation par ID
-        String sql = "SELECT * FROM reservations WHERE id_reservation = ?";
+        String sql = "SELECT * FROM reservations WHERE idRes = ?";
 
         try {
             // Préparation de la requête
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, id_reservation);
+            stmt.setInt(1, idRes);
 
             // Exécution de la requête
             ResultSet rs = stmt.executeQuery();
@@ -89,14 +114,14 @@ public class ReservationDAO {
 
             // Si un résultat est trouvé
             if (rs.next()) {
-                Employee e = employeeDAO.chercherEmployeeParId(rs.getInt("id_employee"));
-                Facture f = factureDAO.chercherFactureParId(rs.getInt("id_factures"));
-                StatutReservation s = statutReservationDAO.chercherStatutReservationParId(rs.getInt("id_statut"));
+                Employee e = employeeDAO.chercherEmployeeParId(rs.getInt("idEmployee"));
+                Facture f = factureDAO.chercherFactureParId(rs.getInt("idFactures"));
+                StatutReservation s = statutReservationDAO.chercherStatutReservationParId(rs.getInt("idStatut"));
                 Clients c = clientDAO.chercherClientParId(rs.getInt("idClient"));
 
                 // Retourne un objet Reservation créé avec les données récupérées
                 return new Reservation(
-                        rs.getInt("id_res"),
+                        rs.getInt("idRes"),
                         rs.getDate("dateResDebut"),
                         rs.getDate("dateResFin"),
                         rs.getInt("nombrePersonnes"),
@@ -171,38 +196,57 @@ public class ReservationDAO {
      * @param dateResFin      Date de fin de la réservation.
      * @param nombresPersonnes Nombre de personnes.
      * @param petitDejeuner   Indique si le petit déjeuner est inclus.
-     * @param id_employee     ID de l'employé.
-     * @param id_factures     ID de la facture.
-     * @param id_statut       ID du statut.
-     * @param id_client       ID du client.
+     * @param idEmployee     ID de l'employé.
+     * @param idFactures     ID de la facture.
+     * @param idStatut       ID du statut.
+     * @param idClient       ID du client.
      */
-    public void modifierReservation(int idRes, Date dateResDebut, Date dateResFin, int nombresPersonnes, int petitDejeuner,
-                                    int id_employee, int id_factures, int id_statut, int id_client) {
+    public Reservation modifierReservation(int idRes, Date dateResDebut, Date dateResFin, int nombresPersonnes, int petitDejeuner,
+                                    int idEmployee, int idFactures, int idStatut, int idClient) {
         // Requête SQL pour mettre à jour une réservation
-        String sql = "UPDATE reservations SET dateResDebut = ?, dateResFin = ?, nombresPersonnes = ?, petitDejeuner = ?, " +
-                "id_employee = ?, id_factures = ?, id_statut = ?, id_client = ? WHERE idRes = ?";
+        String sql = "UPDATE reservations SET dateResDebut = ?, dateResFin = ?, nombres_personnes = ?, petit_dejeuner = ?, " +
+                "id_employee = ?, id_factures = ?, id_statut = ?, id_client = ? WHERE id_res = ?";
 
         try {
             // Création de la requête préparée
             PreparedStatement stmt = connection.prepareStatement(sql);
+
 
             // Définition des paramètres
             stmt.setDate(1, dateResDebut);
             stmt.setDate(2, dateResFin);
             stmt.setInt(3, nombresPersonnes);
             stmt.setInt(4, petitDejeuner);
-            stmt.setInt(5, id_employee);
-            stmt.setInt(6, id_factures);
-            stmt.setInt(7, id_statut);
-            stmt.setInt(8, id_client);
+            stmt.setInt(5, idEmployee);
+            stmt.setInt(6, idFactures);
+            stmt.setInt(7, idStatut);
+            stmt.setInt(8, idClient);
             stmt.setInt(9, idRes);
 
             // Exécution de la mise à jour
             stmt.executeUpdate();
+
+            // Créer une intance des DAO
+            EmployeeDAO employeeDAO = new EmployeeDAO();
+            FactureDAO factureDAO = new FactureDAO(connection);
+            StatutReservationDAO statutDAO = new StatutReservationDAO(connection);
+            ClientsDAO clientDAO = new ClientsDAO();
+
+            // Récupérer les objets
+            Employee employe = employeeDAO.chercherEmployeeParId(idEmployee);
+            Facture facture = factureDAO.chercherFactureParId(idFactures);
+            StatutReservation statut = statutDAO.chercherStatutReservationParId(idStatut);
+            Clients client = clientDAO.chercherClientParId(idClient);
+            System.out.println("Reservation " + idRes + " modifiée avec succès." );
+
+            // Retourner l'objet modifié
+            Reservation rs = new Reservation(idRes, dateResDebut, dateResFin, nombresPersonnes, petitDejeuner, employe
+            , facture, statut, client);
+            return rs;
         } catch (SQLException e) {
             // Capture et affiche les erreurs
             System.out.println("Erreur lors de la modification : " + e.getMessage());
-        }
+        }return null;
     }
 
     /**
@@ -210,9 +254,9 @@ public class ReservationDAO {
      *
      * @param idRes ID de la réservation à supprimer.
      */
-    public void supprimerReservation(int idRes) {
+    public boolean supprimerReservation(int idRes) {
         // Requête SQL pour suppression
-        String sql = "DELETE FROM reservations WHERE idRes = ?";
+        String sql = "DELETE FROM reservations WHERE id_res = ?";
 
         try {
             // Préparation de la requête
@@ -221,9 +265,10 @@ public class ReservationDAO {
 
             // Exécution de la requête
             stmt.executeUpdate();
+            return true;
         } catch (SQLException e) {
             // Capture et affiche les erreurs
             System.out.println("Erreur lors de la suppression : " + e.getMessage());
-        }
+        }return false;
     }
 }
