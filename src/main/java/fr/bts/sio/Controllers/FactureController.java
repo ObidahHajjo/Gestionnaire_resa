@@ -65,7 +65,7 @@ public class FactureController {
      */
     public void afficherFactureParId(int id) {
         try {
-            Facture f = factureDAO.getFactureById(id); // Récupère la facture via son ID
+            Facture f = factureDAO.chercherFactureParId(id); // Récupère la facture via son ID
             if (f != null) {
                 System.out.println(f); // Affiche la facture trouvée
             } else {
@@ -87,7 +87,7 @@ public class FactureController {
      */
     public void modifierFacture(String chemin, String NomFichier, float tva, float prix, int idFactures) {
         try {
-            Facture factureExistante = factureDAO.getFactureById(idFactures); // Récupère la facture existante
+            Facture factureExistante = factureDAO.chercherFactureParId(idFactures); // Récupère la facture existante
             if (factureExistante != null) {
                 // Mise à jour des données de la facture
                 factureExistante.setChemin(chemin);
@@ -112,7 +112,7 @@ public class FactureController {
      */
     public void supprimerFacture(int idFactures) {
         try {
-            Facture f = factureDAO.getFactureById(idFactures); // Récupère la facture à supprimer
+            Facture f = factureDAO.chercherFactureParId(idFactures); // Récupère la facture à supprimer
             if (f != null) {
                 factureDAO.supprimerFacture(idFactures); // Supprime la facture via le DAO
                 System.out.println("La facture " + idFactures + " a été supprimée");
