@@ -1,13 +1,14 @@
-package fr.bts.sio.DAO;  // Définit le package dans lequel se trouve cette classe
+package fr.bts.sio.DAO; // Définit le package dans lequel se trouve cette classe
 
 // Importation des classes nécessaires
 import fr.bts.sio.Models.TypeChambre; // Modèle représentant un type de chambre
 import java.sql.*; // Pour les interactions SQL
 import java.util.List; // Pour manipuler les listes
+import java.util.ArrayList; // Permet de créer des listes dynamiques
 
 /**
- * Cette classe est un DAO (Data Access Object) qui permet de gérer les opérations CRUD
- * (Create, Read, Update, Delete) pour les entités TypeChambre dans une base de données.
+ * Cette classe est un DAO (Data Access Object) qui gère les opérations CRUD
+ * (Create, Read, Update, Delete) pour les entités `TypeChambre` dans une base de données.
  */
 public class TypeChambreDAO {
 
@@ -16,48 +17,60 @@ public class TypeChambreDAO {
 
     /**
      * Constructeur permettant d'injecter une connexion à la base de données.
-     * @param connection la connexion à la base de données
+     *
+     * @param connection La connexion active à la base de données.
      */
     public TypeChambreDAO(Connection connection) {
         this.connection = connection; // Initialise la connexion
     }
 
     /**
-     * Ajoute un nouveau type de chambre dans la base de données.
-     * @param idTypeChambre l'identifiant unique du type de chambre
-     * @param libelle le libellé ou la description du type de chambre
+     * CREATE : Ajoute un nouveau type de chambre dans la base de données.
+     *
+     * @param libelle Le libellé ou la description du type de chambre.
      */
-    public void ajouterTypeChambre(int idTypeChambre, String libelle) {
+    public TypeChambre ajouterTypeChambre(String libelle) {
         // Requête SQL pour insérer un nouveau type de chambre
-        String sql = "INSERT INTO TypeChambre (idTypeChambre, libelle) VALUES (?, ?)";
+        String sql = "INSERT INTO TypeChambre (libelle) VALUES (?)";
 
         try {
             // Préparation de l'instruction SQL
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, idTypeChambre); // Définit le premier paramètre (idTypeChambre)
-            stmt.setString(2, libelle); // Définit le deuxième paramètre (libelle)
+            PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            stmt.setString(1, libelle); // Définit le premier paramètre (libelle)
 
             // Exécution de la requête
             stmt.executeUpdate();
-        } catch (Exception e) { // Capture des exceptions
-            // Affiche un message en cas d'erreur lors de l'ajout
+
+            // Récupération de l'ID généré
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            int idTypeChambre = 0;
+            if (generatedKeys.next()) {
+                idTypeChambre = generatedKeys.getInt(1); // Récupère l'ID généré
+            }
+
+            // Création d'un objet TypeChambre pour représenter le type ajouté
+            TypeChambre tc = new TypeChambre(idTypeChambre, libelle);
+            System.out.println("Type de chambre ajouté avec succès : " + tc);
+            return tc;
+        } catch (SQLException e) { // Capture des erreurs SQL
             System.out.println("Erreur lors de l'ajout du type de chambre : " + e.getMessage());
-        }
+        }  return null;
     }
 
     /**
-     * Recherche un type de chambre dans la base de données par son identifiant.
-     * @param idTypeChambre l'identifiant du type de chambre
-     * @return un objet TypeChambre si trouvé, sinon null
+     * READ : Recherche un type de chambre dans la base de données par son identifiant.
+     *
+     * @param idTypeChambre L'identifiant du type de chambre.
+     * @return Un objet `TypeChambre` si trouvé, sinon `null`.
      */
     public TypeChambre chercherTypeChambreParId(int idTypeChambre) {
         // Requête SQL pour rechercher un type de chambre par son ID
-        String sql = "SELECT * FROM TypeChambre WHERE idTypeChambre = ?";
+        String sql = "SELECT * FROM TypeChambre WHERE id_type_chambre = ?";
 
         try {
             // Préparation de l'instruction SQL
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, idTypeChambre); // Définit le paramètre ID
+            stmt.setInt(1, idTypeChambre); // Définit l'ID à rechercher
 
             // Exécution de la requête
             ResultSet rs = stmt.executeQuery();
@@ -72,19 +85,20 @@ public class TypeChambreDAO {
         } catch (SQLException e) { // Capture des erreurs SQL
             System.out.println("Erreur lors de la récupération du type de chambre : " + e.getMessage());
         }
-        return null; // Retourne null si rien n'est trouvé ou en cas d'erreur
+        return null; // Retourne null si aucun résultat trouvé
     }
 
     /**
-     * Récupère la liste de tous les types de chambres de la base de données.
-     * @return une liste contenant tous les types de chambres
+     * READ : Récupère la liste de tous les types de chambres dans la base de données.
+     *
+     * @return Une liste contenant tous les types de chambres.
      */
-    public List<TypeChambre> chercherTotutesTypeChambres() {
-        // Initialisation d'une liste vide pour stocker les résultats
-        List<TypeChambre> typeChambres = new java.util.ArrayList<>();
+    public List<TypeChambre> chercherToutesTypeChambres() {
+        // Initialisation d'une liste pour stocker les résultats
+        List<TypeChambre> typeChambres = new ArrayList<>();
 
         // Requête SQL pour sélectionner tous les types de chambres
-        String sql = "SELECT * FROM TypeChambre";
+        String sql = "SELECT * FROM type_chambre";
 
         try {
             // Création d'une instruction SQL
@@ -93,58 +107,65 @@ public class TypeChambreDAO {
 
             // Parcourt chaque ligne du ResultSet
             while (rs.next()) {
-                // Crée un objet TypeChambre à partir des données récupérées
+                // Création d'un objet TypeChambre à partir des données récupérées
                 TypeChambre typeChambre = new TypeChambre(
                         rs.getInt("idTypeChambre"), // Récupère l'ID
                         rs.getString("libelle") // Récupère le libellé
                 );
-                typeChambres.add(typeChambre); // Ajoute l'objet à la liste
+                typeChambres.add(typeChambre); // Ajoute l'objet TypeChambre à la liste
             }
         } catch (SQLException e) { // Capture des erreurs SQL
-            System.out.println("Erreur lors du traitement de la recherche des types de chambres : " + e.getMessage());
+            System.out.println("Erreur lors de la récupération des types de chambres : " + e.getMessage());
         }
         return typeChambres; // Retourne la liste des types de chambres
     }
 
     /**
-     * Modifie un type de chambre existant dans la base de données.
-     * @param idTypeChambre l'identifiant du type de chambre à modifier
-     * @param libelle le nouveau libellé du type de chambre
+     * UPDATE : Modifie un type de chambre existant dans la base de données.
+     *
+     * @param idTypeChambre L'identifiant du type de chambre à modifier.
+     * @param libelle       Le nouveau libellé du type de chambre.
      */
-    public void modifierTypeChambre(int idTypeChambre, String libelle) {
+    public TypeChambre modifierTypeChambre(int idTypeChambre, String libelle) {
         // Requête SQL pour mettre à jour un type de chambre
-        String sql = "UPDATE TypeChambre SET libelle = ? WHERE idTypeChambre = ?";
+        String sql = "UPDATE TypeChambre SET libelle = ? WHERE id_type_chambre = ?";
 
         try {
             // Préparation de l'instruction SQL
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setString(1, libelle); // Définit le nouveau libellé
-            stmt.setInt(2, idTypeChambre); // Définit l'ID du type à modifier
+            stmt.setInt(2, idTypeChambre); // Définit l'ID à modifier
 
             // Exécution de la requête
             stmt.executeUpdate();
+            System.out.println("Type de chambre (ID: " + idTypeChambre + ") modifié avec succès.");
+            TypeChambre tc= new TypeChambre(idTypeChambre, libelle);
+            return tc;
         } catch (SQLException e) { // Capture des erreurs SQL
-            System.out.println("Erreur de modification du type de chambre : " + e.getMessage());
-        }
+            System.out.println("Erreur lors de la modification du type de chambre : " + e.getMessage());
+        } return null;
     }
 
     /**
-     * Supprime un type de chambre de la base de données en fonction de son identifiant.
-     * @param idTypeChambre l'identifiant du type de chambre à supprimer
+     * DELETE : Supprime un type de chambre de la base de données par son identifiant.
+     *
+     * @param idTypeChambre L'identifiant du type de chambre à supprimer.
      */
-    public void supprimerTypeChambre(int idTypeChambre) {
+    public boolean supprimerTypeChambre(int idTypeChambre) {
         // Requête SQL pour supprimer un type de chambre
-        String sql = "DELETE FROM TypeChambre WHERE idTypeChambre = ?";
+        String sql = "DELETE FROM TypeChambre WHERE id_type_chambre = ?";
 
         try {
             // Préparation de l'instruction SQL
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, idTypeChambre); // Définit l'ID du type à supprimer
+            stmt.setInt(1, idTypeChambre); // Définit l'ID à supprimer
 
-            // Exécution de la suppression
+            // Exécution de la requête DELETE
             stmt.executeUpdate();
+            System.out.println("Type de chambre (ID: " + idTypeChambre + ") supprimé avec succès.");
+            return true;
         } catch (SQLException e) { // Capture des erreurs SQL
-            System.out.println("Erreur de suppression du type de chambre : " + e.getMessage());
-        }
+            System.out.println("Erreur lors de la suppression du type de chambre : " + e.getMessage());
+        } return false;
     }
 }

@@ -30,18 +30,18 @@ public class FactureController {
      * Ajouter une facture dans la base de données
      * @param chemin Le chemin du fichier de la facture
      * @param nomFichier Le nom du fichier
-     * @param tva La TVA appliquée
      * @param prix Le prix total de la facture
      */
-    public void ajouterFacture(String chemin, String nomFichier, float tva, float prix) {
-        Facture f = new Facture(0, chemin, nomFichier, tva, prix); // Création d'un objet Facture
-        try {
-            factureDAO.ajouterFacture(f); // Ajout de la facture dans la base via le DAO
-            System.out.println("Facture ajoutée avec succès !");
-        } catch (SQLException e) {
-            // Gestion des erreurs SQL lors de l'ajout
-            System.out.println("Erreur lors de l'ajout : " + e.getMessage());
-        }
+    public void ajouterFacture(String chemin, String nomFichier, float prix) {
+        Facture f = new Facture(0, chemin, nomFichier, prix); // Création d'un objet Facture
+
+            factureDAO.ajouterFacture(chemin, nomFichier, prix); // Ajout de la facture dans la base via le DAO
+            if (f != null ) {
+                System.out.println("Facture ajoutée avec succès !");
+            }else {
+                System.out.println("Erreur lors de l'ajout : ");
+            }
+
     }
 
     /**
