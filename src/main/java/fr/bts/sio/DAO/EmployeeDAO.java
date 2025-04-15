@@ -22,13 +22,8 @@ public class EmployeeDAO {
      * Constructeur pour initialiser la connexion à la base de données.
      * Par défaut, la connexion est établie avec une base H2.
      */
-    public EmployeeDAO() {
-        try {
-            // Se connecter à la base de données H2 (ajuste l'URL si nécessaire)
-            connection = DriverManager.getConnection("jdbc:", "", "");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public EmployeeDAO(Connection connection) {
+        this.connection = connection;
     }
 
     // Méthode pour créer un nouvel employé
@@ -162,5 +157,32 @@ public class EmployeeDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * Chercher un employé par email
+     * @param email
+     * @return objet 'Employee"
+     */
+    public Employee chercherEmployeeParEmail(String email) {
+        try{
+            String sql = "SELECt * FROM employee WHERE email_emplyee = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1,email);
+            ResultSet rs =stmt.executeQuery();
+            if(rs.next()) {
+                RoleEmployeeDAO roleEmployee = new RoleEmployeeDAO();
+                return new Employee(
+                        rs.getInt("id_employee"),
+                        rs.getString("nom_employee"),
+                        rs.getString("email_emplyee"),
+                        rs.getString("mdp_employee"),
+                        roleEmployee.chercherRoleParId(rs.getInt("id_role"))
+                );
+            }
+        }catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 }

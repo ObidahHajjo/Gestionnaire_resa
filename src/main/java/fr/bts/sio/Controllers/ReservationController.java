@@ -42,7 +42,7 @@ public class ReservationController {
         int id_factures = reservation.getFacture().getIdFactures();
         int id_statut = reservation.getStatutReservation().getIdStatut();
         int id_client = reservation.getClient().getIdClient();
-        reservationDAO.ajouterReservation(dateResDebut, dateResFin, nombresPersonnes, petitDejeuner,
+        reservationDAO.ajouteReservation(dateResDebut, dateResFin, nombresPersonnes, petitDejeuner,
                 id_employee, id_factures, id_statut, id_client); // Ajout de la réservation dans la base via le DAO
         System.out.println("Réservation ajoutée avec succès !");
 

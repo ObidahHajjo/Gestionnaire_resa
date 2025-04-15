@@ -66,7 +66,7 @@ public class ReservationDAO {
                 idRes = generatedKeys.getInt(1);
             }
             // Création d'un objet de Réservation
-            EmployeeDAO e = new EmployeeDAO();
+            EmployeeDAO e = new EmployeeDAO(connection);
             Employee employee = e.chercherEmployeeParId(idEmployee);
 
             FactureDAO f = new FactureDAO(connection);
@@ -75,7 +75,7 @@ public class ReservationDAO {
             StatutReservationDAO s = new StatutReservationDAO(connection);
             StatutReservation statutReservation = s.chercherStatutReservationParId(idStatut);
 
-            ClientsDAO c = new ClientsDAO();
+            ClientsDAO c = new ClientsDAO(connection);
             Clients client = c.chercherClientParId(idClient);
 
             Reservation rs = new Reservation(idRes, dateResDebut, dateResFin, nombresPersonnes, petitDejeuner,
@@ -107,10 +107,10 @@ public class ReservationDAO {
             ResultSet rs = stmt.executeQuery();
 
             // DAO nécessaires pour récupérer les relations associées
-            EmployeeDAO employeeDAO = new EmployeeDAO();
+            EmployeeDAO employeeDAO = new EmployeeDAO(connection);
             FactureDAO factureDAO = new FactureDAO(connection);
             StatutReservationDAO statutReservationDAO = new StatutReservationDAO(connection);
-            ClientsDAO clientDAO = new ClientsDAO();
+            ClientsDAO clientDAO = new ClientsDAO(connection);
 
             // Si un résultat est trouvé
             if (rs.next()) {
@@ -156,10 +156,10 @@ public class ReservationDAO {
             ResultSet rs = stmt.executeQuery();
 
             // DAO nécessaires pour récupérer les relations associées
-            EmployeeDAO employeeDAO = new EmployeeDAO();
+            EmployeeDAO employeeDAO = new EmployeeDAO(connection);
             FactureDAO factureDAO = new FactureDAO(connection);
             StatutReservationDAO statutReservationDAO = new StatutReservationDAO(connection);
-            ClientsDAO clientDAO = new ClientsDAO();
+            ClientsDAO clientDAO = new ClientsDAO(connection);
 
             // Parcourt chaque ligne du résultat
             while (rs.next()) {
@@ -227,10 +227,10 @@ public class ReservationDAO {
             stmt.executeUpdate();
 
             // Créer une intance des DAO
-            EmployeeDAO employeeDAO = new EmployeeDAO();
+            EmployeeDAO employeeDAO = new EmployeeDAO(connection);
             FactureDAO factureDAO = new FactureDAO(connection);
             StatutReservationDAO statutDAO = new StatutReservationDAO(connection);
-            ClientsDAO clientDAO = new ClientsDAO();
+            ClientsDAO clientDAO = new ClientsDAO(connection);
 
             // Récupérer les objets
             Employee employe = employeeDAO.chercherEmployeeParId(idEmployee);
