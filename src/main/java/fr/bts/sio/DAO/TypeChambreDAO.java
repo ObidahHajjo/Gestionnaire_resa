@@ -1,6 +1,7 @@
 package fr.bts.sio.DAO; // Définit le package dans lequel se trouve cette classe
 
 // Importation des classes nécessaires
+import fr.bts.sio.Interface.TypeChambreDAOInterface;
 import fr.bts.sio.Models.TypeChambre; // Modèle représentant un type de chambre
 import java.sql.*; // Pour les interactions SQL
 import java.util.List; // Pour manipuler les listes
@@ -10,7 +11,7 @@ import java.util.ArrayList; // Permet de créer des listes dynamiques
  * Cette classe est un DAO (Data Access Object) qui gère les opérations CRUD
  * (Create, Read, Update, Delete) pour les entités `TypeChambre` dans une base de données.
  */
-public class TypeChambreDAO {
+public class TypeChambreDAO implements TypeChambreDAOInterface {
 
     // Attribut représentant une connexion à la base de données
     private Connection connection;
@@ -29,6 +30,7 @@ public class TypeChambreDAO {
      *
      * @param libelle Le libellé ou la description du type de chambre.
      */
+    @Override
     public TypeChambre ajouterTypeChambre(String libelle) {
         // Requête SQL pour insérer un nouveau type de chambre
         String sql = "INSERT INTO TypeChambre (libelle) VALUES (?)";
@@ -63,6 +65,7 @@ public class TypeChambreDAO {
      * @param idTypeChambre L'identifiant du type de chambre.
      * @return Un objet `TypeChambre` si trouvé, sinon `null`.
      */
+    @Override
     public TypeChambre chercherTypeChambreParId(int idTypeChambre) {
         // Requête SQL pour rechercher un type de chambre par son ID
         String sql = "SELECT * FROM TypeChambre WHERE id_type_chambre = ?";
@@ -93,6 +96,7 @@ public class TypeChambreDAO {
      *
      * @return Une liste contenant tous les types de chambres.
      */
+    @Override
     public List<TypeChambre> chercherToutesTypeChambres() {
         // Initialisation d'une liste pour stocker les résultats
         List<TypeChambre> typeChambres = new ArrayList<>();
@@ -126,6 +130,7 @@ public class TypeChambreDAO {
      * @param idTypeChambre L'identifiant du type de chambre à modifier.
      * @param libelle       Le nouveau libellé du type de chambre.
      */
+    @Override
     public TypeChambre modifierTypeChambre(int idTypeChambre, String libelle) {
         // Requête SQL pour mettre à jour un type de chambre
         String sql = "UPDATE TypeChambre SET libelle = ? WHERE id_type_chambre = ?";
@@ -151,6 +156,7 @@ public class TypeChambreDAO {
      *
      * @param idTypeChambre L'identifiant du type de chambre à supprimer.
      */
+    @Override
     public boolean supprimerTypeChambre(int idTypeChambre) {
         // Requête SQL pour supprimer un type de chambre
         String sql = "DELETE FROM TypeChambre WHERE id_type_chambre = ?";

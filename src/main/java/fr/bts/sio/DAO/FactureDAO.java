@@ -1,6 +1,7 @@
 package fr.bts.sio.DAO;
 
 // Importation des classes nécessaires pour l'interaction avec la base de données
+import fr.bts.sio.Interface.FactureDAOInterface;
 import fr.bts.sio.Models.Facture;
 
 import java.sql.*;
@@ -13,7 +14,7 @@ import java.util.List;
  * Elle offre des méthodes pour effectuer des opérations CRUD (Create, Read, Update, Delete)
  * sur les factures.
  */
-public class FactureDAO {
+public class FactureDAO implements FactureDAOInterface {
 
     // Attribut représentant la connexion à la base de données
     private Connection connection;
@@ -34,6 +35,7 @@ public class FactureDAO {
      * @param nomFichier Le nom du fichier associé à la facture.
      * @param prix       Le prix total indiqué dans la facture.
      */
+    @Override
     public Facture ajouterFacture(String chemin, String nomFichier, float prix) {
         String sql = "INSERT INTO factures (chemin, nom_fichier, prix) VALUES (?, ?, ?)";
         try {
@@ -69,6 +71,7 @@ public class FactureDAO {
      * @param id L'identifiant unique de la facture.
      * @return Une instance de `Facture` si trouvée, ou `null` si aucune facture ne correspond.
      */
+    @Override
     public Facture chercherFactureParId(int id) {
         String sql = "SELECT * FROM factures WHERE id_factures = ?";
         try {
@@ -96,6 +99,7 @@ public class FactureDAO {
      *
      * @return Une liste contenant toutes les factures.
      */
+    @Override
     public List<Facture> chercherToutesFactures() {
         List<Facture> factures = new ArrayList<>();
         String sql = "SELECT * FROM factures";
@@ -125,17 +129,16 @@ public class FactureDAO {
      * @param idFacture  L'identifiant unique de la facture à modifier.
      * @param chemin     Le nouveau chemin de la facture.
      * @param nomFichier Le nouveau nom du fichier.
-     * @param tva        La nouvelle TVA appliquée à la facture.
      * @param prix       Le nouveau montant total de la facture.
      */
-    public Facture modifierFacture(int idFacture, String chemin, String nomFichier, float tva, float prix) {
-        String sql = "UPDATE factures SET chemin = ?, nom_fichier = ?, tva = ?, prix = ? WHERE id_factures = ?";
+    @Override
+    public Facture modifierFacture(int idFacture, String chemin, String nomFichier, float prix) {
+        String sql = "UPDATE factures SET chemin = ?, nom_fichier = ?, prix = ? WHERE id_factures = ?";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             // Remplacement des paramètres "?" par les valeurs passées en arguments.
             stmt.setString(1, chemin);
             stmt.setString(2, nomFichier);
-            stmt.setFloat(3, tva);
             stmt.setFloat(4, prix);
             stmt.setInt(5, idFacture);
 
@@ -155,6 +158,7 @@ public class FactureDAO {
      *
      * @param id L'identifiant unique de la facture à supprimer.
      */
+    @Override
     public boolean supprimerFacture(int id) {
         String sql = "DELETE FROM factures WHERE id_factures = ?";
         try {

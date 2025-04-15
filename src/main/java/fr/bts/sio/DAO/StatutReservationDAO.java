@@ -1,6 +1,7 @@
 package fr.bts.sio.DAO;
 
 // Importations nécessaires pour le modèle et les interactions avec la base de données
+import fr.bts.sio.Interface.StatutReservationDAOInterface;
 import fr.bts.sio.Models.StatutReservation; // Classe modèle représentant le statut de réservation
 import java.sql.*; // Importation pour gérer les connexions et requêtes SQL
 import java.util.ArrayList; // Importation pour manipuler les listes
@@ -11,7 +12,7 @@ import java.util.List; // Interface pour définir une liste générique
  * Cette classe gère toutes les opérations entre la table `statut_reservation`
  * dans la base de données et l'application Java.
  */
-public class StatutReservationDAO {
+public class StatutReservationDAO implements StatutReservationDAOInterface {
 
     // Attribut pour stocker la connexion à la base de données
     private Connection connection;
@@ -30,6 +31,7 @@ public class StatutReservationDAO {
      *
      * @param idStatut L'objet `StatutReservation` contenant les nouvelles valeurs.
      */
+    @Override
     public StatutReservation modifierStatutReservation(int idStatut, String libelle) {
         // Requête SQL pour mettre à jour un statut existant
         String sql = "UPDATE statut_reservation SET libelle=? WHERE id_statut=?";
@@ -57,6 +59,7 @@ public class StatutReservationDAO {
      *
      * @return Une liste contenant tous les objets `StatutReservation` récupérés.
      */
+    @Override
     public List<StatutReservation> chercherTousStatutsReservations() {
         // Liste pour stocker les statuts récupérés
         List<StatutReservation> statutReservations = new ArrayList<>();
@@ -95,6 +98,7 @@ public class StatutReservationDAO {
      * @param id L'identifiant du statut de réservation.
      * @return Un objet `StatutReservation` correspondant, ou `null` si aucun statut n'est trouvé.
      */
+    @Override
     public StatutReservation chercherStatutReservationParId(int id) {
         // Requête SQL pour rechercher un statut donné par son ID
         String sql = "SELECT * FROM statut_reservation WHERE id_statut=?";
@@ -129,6 +133,7 @@ public class StatutReservationDAO {
      *
      * @param id L'identifiant du statut de réservation à supprimer.
      */
+    @Override
     public boolean supprimerStatutReservation(int id) {
         // Requête SQL pour supprimer un statut par son ID
         String sql = "DELETE FROM statut_reservation WHERE id_statut=?";

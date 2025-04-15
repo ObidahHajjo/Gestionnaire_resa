@@ -7,7 +7,7 @@
    <children>
       <VBox prefHeight="100.0" prefWidth="800.0">
          <children>
-            <MenuBar maxHeight="1080.0" maxWidth="1440.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="1440.0">
+            <MenuBar maxHeight="1080.0" maxWidth="1440.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="45.0" prefWidth="1440.0">
               <menus>
                   <Menu mnemonicParsing="false" text="Clients">
                     <items>

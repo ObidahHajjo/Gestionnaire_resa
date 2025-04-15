@@ -1,5 +1,6 @@
 package fr.bts.sio.DAO;
 
+import fr.bts.sio.Interface.ChambreDAOInterface;
 import fr.bts.sio.Models.Chambre;
 import fr.bts.sio.Models.Reservation;
 import fr.bts.sio.Models.TypeChambre;
@@ -14,7 +15,7 @@ import java.util.List;
  * Elle fournit des méthodes CRUD (Create, Read, Update, Delete) pour gérer
  * les chambres dans la base de données.
  */
-public class ChambreDAO {
+public class ChambreDAO implements ChambreDAOInterface {
 
     // La connexion active avec la base de données
     private Connection connection;
@@ -35,6 +36,7 @@ public class ChambreDAO {
      * @param id_type_chambre Identifiant du type de la chambre (relation avec TypeChambreDAO).
      * @param id_res          Identifiant de la réservation associée (relation avec ReservationDAO).
      */
+    @Override
     public Chambre ajouteChambre(String numero_chambre, int id_type_chambre, int id_res) {
         String sql = "INSERT INTO chambres (numeroChambre, idTypeChambre, idRes) VALUES (?, ?, ?)";
 
@@ -72,6 +74,7 @@ public class ChambreDAO {
      * @param id_chambre Identifiant unique de la chambre.
      * @return L'objet `Chambre` correspondant à l'ID ou `null` si non trouvé.
      */
+    @Override
     public Chambre chercherChambreParId(int id_chambre) {
         String sql = "SELECT * FROM chambres WHERE id_chambre = ?";
 
@@ -107,6 +110,7 @@ public class ChambreDAO {
      *
      * @return Une liste contenant toutes les chambres.
      */
+    @Override
     public List<Chambre> chercherToutesChambres() {
         List<Chambre> chambres = new ArrayList<>();
         String sql = "SELECT * FROM chambres";
@@ -147,6 +151,7 @@ public class ChambreDAO {
      * @param id_type_chambre Nouvel identifiant du type de la chambre.
      * @param id_res         Nouvel identifiant de la réservation associée.
      */
+    @Override
     public Chambre modifierChambre(int id_chambre, String numero_chambre, int id_type_chambre, int id_res) {
         String sql = "UPDATE chambres SET numero_chambre = ?, id_type_chambre = ?, id_res = ? WHERE id_chambre = ?";
 
@@ -177,6 +182,7 @@ public class ChambreDAO {
      *
      * @param id_chambre Identifiant unique de la chambre à supprimer.
      */
+    @Override
     public boolean supprimerChambre(int id_chambre) {
         String sql = "DELETE FROM chambres WHERE id_chambre = ?";
 

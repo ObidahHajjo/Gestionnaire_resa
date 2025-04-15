@@ -1,5 +1,6 @@
 package fr.bts.sio.DAO;
 
+import fr.bts.sio.Interface.EmployeeDAOInterface;
 import fr.bts.sio.Models.Employee;
 import fr.bts.sio.Models.Facture;
 import fr.bts.sio.Models.RoleEmployee;
@@ -13,7 +14,7 @@ import java.util.List;
  * telles que la création, la récupération, la mise à jour et la suppression
  * des employés.
  */
-public class EmployeeDAO {
+public class EmployeeDAO implements EmployeeDAOInterface {
 
     private Connection connection;
 
@@ -22,13 +23,8 @@ public class EmployeeDAO {
      * Constructeur pour initialiser la connexion à la base de données.
      * Par défaut, la connexion est établie avec une base H2.
      */
-    public EmployeeDAO() {
-        try {
-            // Se connecter à la base de données H2 (ajuste l'URL si nécessaire)
-            connection = DriverManager.getConnection("jdbc:", "", "");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public EmployeeDAO(Connection connection) {
+        this.connection = connection;
     }
 
     // Méthode pour créer un nouvel employé
@@ -38,6 +34,7 @@ public class EmployeeDAO {
      * @param employee L'objet `Employee` contenant les informations de l'employé à ajouter.
      * @return `true` si l'insertion a réussi, `false` sinon.
      */
+    @Override
     public boolean ajouterEmployee(Employee employee) {
         String query = "INSERT INTO employee(nom_employee, email_emplyee, mdp_employee, id_role) VALUES(?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -60,6 +57,7 @@ public class EmployeeDAO {
      * @param idEmployee L'identifiant unique de l'employé à récupérer.
      * @return Un objet `Employee` contenant les informations de l'employé, ou `null` si non trouvé.
      */
+    @Override
     public Employee chercherEmployeeParId(int idEmployee) {
         String query = "SELECT e.id_employee, e.nom_employee, e.email_employee, e.mdp_employee, r.id_role, r.libelle " +
                 "FROM employee e " +
@@ -91,24 +89,23 @@ public class EmployeeDAO {
      * @return Une liste contenant tous les  employés.
      *         Retourne `null` en cas d'échec.
      */
+    @Override
     public List<Employee> chercherTousLesEmployees() {
         List<Employee> employees = new ArrayList<>();
         String query = "SELECT e.id_employee, e.nom_employee, e.email_employee, e.mdp_employee, r.id_role, r.libelle " +
                 "FROM employee e " +
                 "JOIN role_employee r ON e.id_role = r.id_role";
-        // Création et ajout d'un employe à la liste
         try (Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
-            RoleEmployeeDAO roleEmployeeDAO = new RoleEmployeeDAO();
             while (rs.next()) {
-                RoleEmployee role = roleEmployeeDAO.chercherRoleParId(rs.getInt("id_role"));
-
+                // Création et ajout d'un employe à la liste
+                RoleEmployeeDAO roleEmployeeDAO = new RoleEmployeeDAO();
                 Employee employee = new Employee(
                         rs.getInt("id_employee"),
                         rs.getString("nom_employee"),
                         rs.getString("nom_fichier"),
                         rs.getString("email_employee"),
-                        role
+                        roleEmployeeDAO.chercherRoleParId(rs.getInt("id_role"))
                 );
                 employees.add(employee);
             }
@@ -124,17 +121,22 @@ public class EmployeeDAO {
     /**
      * Met à jour les informations d'un employé existant dans la base de données.
      *
-     * @param employee L'objet `Employee` contenant les informations mises à jour de l'employé.
+     * @param idEmployee L'identifiant de l'employé.
+     * @param nomEmployee Le nom de l'employé.
+     * @param emailEmployee L'email de l'employé.
+     * @param mdpEmployee Le mot de passe de l'employé.
+     * @param idRole L'identifiant du rôle de l'employé.
      * @return `true` si la mise à jour a réussi, `false` sinon.
      */
-    public boolean modifierEmployee(Employee employee) {
+    @Override
+    public boolean modifierEmployee(int idEmployee, String nomEmployee, String emailEmployee, String mdpEmployee, int idRole) {
         String query = "UPDATE employee SET nom_employee = ?, email_emplyee = ?, mdp_employee = ?, id_role = ? WHERE id_empmoyee = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, employee.getNomEmployee());
-            stmt.setString(2, employee.getEmailEmployee());
-            stmt.setString(3, employee.getMdpEmployee());
-            stmt.setInt(4, employee.getRole().getIdRole()); // Assurez-vous que le rôle existe
-            stmt.setInt(5, employee.getIdEmployee());
+            stmt.setString(1, nomEmployee);
+            stmt.setString(2, emailEmployee);
+            stmt.setString(3, mdpEmployee);
+            stmt.setInt(4, idRole); // Utilisation de l'identifiant du rôle
+            stmt.setInt(5, idEmployee);
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -150,6 +152,7 @@ public class EmployeeDAO {
      * @param idEmployee L'identifiant unique de l'employé à supprimer.
      * @return `true` si la suppression a réussi, `false` sinon.
      */
+    @Override
     public boolean supprimerEmployee(int idEmployee) {
         String query = "DELETE FROM employee WHERE id_empmoyee = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -160,5 +163,33 @@ public class EmployeeDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * Chercher un employé par email
+     * @param email
+     * @return objet 'Employee"
+     */
+    @Override
+    public Employee chercherEmployeeParEmail(String email) {
+        try{
+            String sql = "SELECt * FROM employee WHERE email_emplyee = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1,email);
+            ResultSet rs =stmt.executeQuery();
+            if(rs.next()) {
+                RoleEmployeeDAO roleEmployee = new RoleEmployeeDAO();
+                return new Employee(
+                        rs.getInt("id_employee"),
+                        rs.getString("nom_employee"),
+                        rs.getString("email_emplyee"),
+                        rs.getString("mdp_employee"),
+                        roleEmployee.chercherRoleParId(rs.getInt("id_role"))
+                );
+            }
+        }catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 }
