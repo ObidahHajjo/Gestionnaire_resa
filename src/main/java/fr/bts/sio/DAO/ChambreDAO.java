@@ -21,7 +21,6 @@ public class ChambreDAO {
 
     /**
      * Constructeur
-     *
      * @param connection Connexion active à la base de données.
      */
     public ChambreDAO(Connection connection) {
@@ -30,7 +29,6 @@ public class ChambreDAO {
 
     /**
      * CREATE : Ajouter une nouvelle chambre dans la base de données.
-     *
      * @param numero_chambre  Numéro de la chambre (identifiant unique dans l'hôtel).
      * @param id_type_chambre Identifiant du type de la chambre (relation avec TypeChambreDAO).
      * @param id_res          Identifiant de la réservation associée (relation avec ReservationDAO).
@@ -104,7 +102,6 @@ public class ChambreDAO {
 
     /**
      * READ (2) : Récupérer toutes les chambres dans la base de données.
-     *
      * @return Une liste contenant toutes les chambres.
      */
     public List<Chambre> chercherToutesChambres() {
@@ -141,7 +138,6 @@ public class ChambreDAO {
 
     /**
      * UPDATE : Modifier une chambre existante dans la base de données.
-     *
      * @param id_chambre     Identifiant unique de la chambre à modifier.
      * @param numero_chambre Nouveau numéro de la chambre.
      * @param id_type_chambre Nouvel identifiant du type de la chambre.
@@ -174,7 +170,6 @@ public class ChambreDAO {
 
     /**
      * DELETE : Supprimer une chambre par son ID.
-     *
      * @param id_chambre Identifiant unique de la chambre à supprimer.
      */
     public boolean supprimerChambre(int id_chambre) {

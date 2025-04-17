@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 // Importation des classes nécessaires pour l'interaction avec la base de données
 import fr.bts.sio.Models.Clients;
+import fr.bts.sio.Utils.MyLogger;
 
 /**
  * La classe ClientsDAO fournit des méthodes pour interagir avec la base de données,
@@ -25,7 +26,6 @@ public class ClientsDAO {
 
     /**
      * Crée un nouveau client dans la base de données.
-     *
      * @param nom Le nom du client
      * @param prenom Le prénom du client
      * @param telephone Le numéro de téléphone du client
@@ -54,7 +54,6 @@ public class ClientsDAO {
 
     /**
      * Récupère un client à partir de son identifiant unique.
-     *
      * @param idClient L'identifiant unique du client à récupérer.
      * @return Un objet `Clients` contenant les informations du client, ou `null` si non trouvé.
      */
@@ -80,7 +79,6 @@ public class ClientsDAO {
 
     /**
      * Récupère tous les clients de la base de données.
-     *
      * @return Un objet `Une liste contenant toutes les clients.
      */
     public List<Clients> chercherTousLesClients() {
@@ -108,7 +106,6 @@ public class ClientsDAO {
 
     /**
      * Met à jour les informations d'un client existant dans la base de données.
-     *
      * @param idClient L'identifiant du client.
      * @param nom Le nom du client.
      * @param prenom Le prénom du client.
@@ -133,7 +130,6 @@ public class ClientsDAO {
 
     /**
      * Supprime un client de la base de données.
-     *
      * @param idClient L'identifiant unique du client à supprimer.
      * @return `true` si la suppression a réussi, `false` sinon.
      */
