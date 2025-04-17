@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1440.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="100.0" prefWidth="800.0">
+         <children>
+            <MenuBar maxHeight="1080.0" maxWidth="1440.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="1440.0">
+              <menus>
+                  <Menu mnemonicParsing="false" text="Clients">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Ajouter un client" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Modifier un client" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Supprimer un client" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Voir tout les clients" />
+                    </items>
+                  </Menu>
+                <Menu mnemonicParsing="false" text="Chambres">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Ajouter une chambre" />
+                        <MenuItem mnemonicParsing="false" text="Modifier une chambre" />
+                        <MenuItem mnemonicParsing="false" text="Suppreimer une chambre" />
+                        <MenuItem mnemonicParsing="false" text="Statut des chambres" />
+                     </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Reservation">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Nouvelle réservation" />
+                        <MenuItem mnemonicParsing="false" text="Annuller une réservation" />
+                        <MenuItem mnemonicParsing="false" text="Modifier une réservation" />
+                  </items>
+                </Menu>
+                  <Menu mnemonicParsing="false" text="Factures">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Créer une facture" />
+                        <MenuItem mnemonicParsing="false" text="Chercher une facture" />
+                    </items>
+                  </Menu>
+                <Menu mnemonicParsing="false" text="Utilisateurs">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Ajouter un utilisateur" />
+                        <MenuItem mnemonicParsing="false" text="Modifier un utilisateur" />
+                        <MenuItem mnemonicParsing="false" text="Supprimer un utilisateur" />
+                        <MenuItem mnemonicParsing="false" text="Voir tout les utilisateurs" />
+                  </items>
+                </Menu>
+                  <Menu mnemonicParsing="false" text="Accueil">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                    </items>
+                  </Menu>
+              </menus>
+            </MenuBar>
+         </children>
+      </VBox>
+   </children>
+</Pane>

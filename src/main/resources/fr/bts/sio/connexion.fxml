@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="832.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.bts.sio.Controllers.ConnexionController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    </columnConstraints>
+
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+        <VBox maxHeight="675.0" maxWidth="600.0" minHeight="675.0" minWidth="600.0" prefHeight="675.0" prefWidth="600.0">
+            <children>
+                <VBox fx:id="imageContainer" alignment="TOP_CENTER" prefHeight="225.0" prefWidth="400.0">
+                    <children>
+                        <ImageView fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../../Images/login.png" />
+                            </image>
+                        </ImageView>
+                    </children>
+               <padding>
+                  <Insets top="12.5" />
+               </padding></VBox>
+                <VBox alignment="TOP_CENTER" prefHeight="225.0" prefWidth="400.0">
+                    <children>
+                        <Label fx:id="error" textFill="RED">
+                            <font>
+                                <Font name="Agency FB" size="27.0" />
+                            </font>
+                        </Label>
+                        <VBox prefHeight="100.0" prefWidth="100.0">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                    <children>
+                                        <Label text="Email :">
+                                            <font>
+                                                <Font name="Agency FB" size="22.0" />
+                                            </font>
+                                            <padding>
+                                                <Insets bottom="10.0" />
+                                            </padding>
+                                            <HBox.margin>
+                                                <Insets right="10.0" />
+                                            </HBox.margin>
+                                        </Label>
+                                        <Label fx:id="loginError" alignment="TOP_CENTER" textFill="#f20000">
+                                            <font>
+                                                <Font name="Agency FB" size="22.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets left="20.0" />
+                                    </VBox.margin>
+                                </HBox>
+                                <TextField fx:id="login" alignment="CENTER" style="-fx-background-radius: 30;">
+                                    <cursor>
+                                        <Cursor fx:constant="TEXT" />
+                                    </cursor>
+                                    <VBox.margin>
+                                        <Insets left="20.0" right="20.0" />
+                                    </VBox.margin>
+                                    <effect>
+                                        <DropShadow height="30.0" offsetX="3.0" offsetY="3.0" radius="18.25" spread="0.14" width="45.0" />
+                                    </effect>
+                                </TextField>
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="20.0" />
+                            </VBox.margin>
+                        </VBox>
+                        <VBox prefHeight="100.0" prefWidth="100.0">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                    <children>
+                                        <Label text="Mot de passe :">
+                                            <font>
+                                                <Font name="Agency FB" size="22.0" />
+                                            </font>
+                                            <HBox.margin>
+                                                <Insets right="10.0" />
+                                            </HBox.margin>
+                                        </Label>
+                                        <Label fx:id="passwordError" textFill="RED">
+                                            <HBox.margin>
+                                                <Insets />
+                                            </HBox.margin>
+                                            <font>
+                                                <Font name="Agency FB" size="22.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets bottom="5.0" left="20.0" />
+                                    </VBox.margin>
+                                </HBox>
+                                <TextField fx:id="password" alignment="CENTER" style="-fx-background-radius: 30;">
+                                    <cursor>
+                                        <Cursor fx:constant="TEXT" />
+                                    </cursor>
+                                    <effect>
+                                        <DropShadow height="41.25" offsetX="3.0" offsetY="3.0" radius="21.0625" spread="0.14" width="45.0" />
+                                    </effect>
+                                    <opaqueInsets>
+                                        <Insets />
+                                    </opaqueInsets>
+                                    <VBox.margin>
+                                        <Insets left="20.0" right="20.0" />
+                                    </VBox.margin>
+                                </TextField>
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="20.0" />
+                            </VBox.margin>
+                        </VBox>
+                    </children>
+                </VBox>
+                <HBox alignment="CENTER" prefHeight="225.0" prefWidth="400.0">
+                    <children>
+                        <Button fx:id="valider" mnemonicParsing="false" onAction="#onVerifyClick" style="-fx-background-radius: 10;" text="Vérifier">
+                            <HBox.margin>
+                                <Insets right="10.0" />
+                            </HBox.margin>
+                            <font>
+                                <Font name="Agency FB" size="18.0" />
+                            </font>
+                            <effect>
+                                <DropShadow height="35.0" offsetX="5.0" offsetY="5.0" radius="19.5" width="45.0" />
+                            </effect>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#onClearClick" style="-fx-background-radius: 10;" text="Effacer">
+                            <HBox.margin>
+                                <Insets right="10.0" />
+                            </HBox.margin>
+                            <font>
+                                <Font name="Agency FB" size="18.0" />
+                            </font>
+                            <effect>
+                                <DropShadow height="35.0" offsetX="5.0" offsetY="5.0" radius="19.5" width="45.0" />
+                            </effect>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#onCloseClick" style="-fx-background-radius: 10; -fx-background-color: red;" text="Quitter" textFill="#dad5d5">
+                            <font>
+                                <Font name="Agency FB" size="18.0" />
+                            </font>
+                            <effect>
+                                <DropShadow height="35.0" offsetX="5.0" offsetY="5.0" radius="19.5" width="45.0" />
+                            </effect>
+                        </Button>
+                    </children>
+                </HBox>
+            </children>
+         <GridPane.margin>
+            <Insets bottom="315.0" left="520.0" />
+         </GridPane.margin>
+        </VBox>
+    </children>
+
+</GridPane>

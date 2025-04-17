@@ -30,25 +30,29 @@ public class RoleEmployeeDAO {
 
     /**
      * Crée un nouveau rôle dans la base de données.
-     *
-     * @param role L'objet `RoleEmployee` contenant les informations du rôle à ajouter.
+     * @param libelle le nom de la role .
      * @return `true` si l'insertion a réussi, `false` sinon.
      */
-    public boolean ajouterRole(RoleEmployee role) {
+    public RoleEmployee ajouterRole(String libelle) {
         String query = "INSERT INTO role_employee(libelle) VALUES(?)";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, role.getLibelle());
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
+        try  {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setString(1, libelle);
+            stmt.executeUpdate();
+            ResultSet rs = stmt.getGeneratedKeys();
+            if(rs.next()){
+                int id = rs.getInt(1);
+                return new RoleEmployee(id, libelle);
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
 
     /**
      * Récupère un rôle à partir de son identifiant unique.
-     *
      * @param idRole L'identifiant unique du rôle à récupérer.
      * @return Un objet `RoleEmployee` contenant les informations du rôle, ou `null` si non trouvé.
      */
@@ -97,25 +101,27 @@ public class RoleEmployeeDAO {
     /**
      * Met à jour les informations d'un rôle existant dans la base de données.
      *
-     * @param role L'objet `RoleEmployee` contenant les nouvelles informations du rôle.
+     * @param idRole L'identifiant unique du rôle à récupérer.
+     * @param libelle le nom de la role .
      * @return `true` si la mise à jour a réussi, `false` sinon.
      */
-    public boolean modifierRole(RoleEmployee role) {
+    public RoleEmployee modifierRole(int idRole, String libelle) {
         String query = "UPDATE role_employee SET libelle = ? WHERE id_role = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, role.getLibelle());
-            stmt.setInt(2, role.getIdRole());
+            stmt.setString(1, libelle);
+            stmt.setInt(2, idRole);
             int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
+            if (rowsAffected > 0) {
+                return new RoleEmployee(idRole, libelle);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
 
     /**
      * Supprime un rôle de la base de données.
-     *
      * @param idRole L'identifiant unique du rôle à supprimer.
      * @return `true` si la suppression a réussi, `false` sinon.
      */
